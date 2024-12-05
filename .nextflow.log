@@ -1,0 +1,87 @@
+Dec-04 18:02:01.772 [main] DEBUG nextflow.cli.Launcher - $> nextflow run nextflow_ngs3pipeline.nf
+Dec-04 18:02:02.020 [main] DEBUG nextflow.cli.CmdRun - N E X T F L O W  ~  version 24.10.2
+Dec-04 18:02:02.046 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; embedded=false; plugins-dir=/home/pragati_4bc/.nextflow/plugins; core-plugins: nf-amazon@2.9.2,nf-azure@1.10.2,nf-cloudcache@0.4.2,nf-codecommit@0.2.2,nf-console@1.1.4,nf-google@1.15.2,nf-tower@1.9.3,nf-wave@1.7.4
+Dec-04 18:02:02.082 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Dec-04 18:02:02.084 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Dec-04 18:02:02.090 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.12.0 in 'deployment' mode
+Dec-04 18:02:02.112 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Dec-04 18:02:02.208 [main] DEBUG nextflow.cli.CmdRun - Applied DSL=2 by global default
+Dec-04 18:02:02.231 [main] DEBUG nextflow.cli.CmdRun - Launching `nextflow_ngs3pipeline.nf` [backstabbing_bernard] DSL2 - revision: fd14ebd4f6
+Dec-04 18:02:02.234 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Dec-04 18:02:02.235 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins resolved requirement=[]
+Dec-04 18:02:02.339 [main] DEBUG nextflow.Session - Session UUID: 129f3383-914a-468d-872a-793aced46be7
+Dec-04 18:02:02.340 [main] DEBUG nextflow.Session - Run name: backstabbing_bernard
+Dec-04 18:02:02.341 [main] DEBUG nextflow.Session - Executor pool size: 8
+Dec-04 18:02:02.353 [main] DEBUG nextflow.file.FilePorter - File porter settings maxRetries=3; maxTransfers=50; pollTimeout=null
+Dec-04 18:02:02.361 [main] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'FileTransfer' minSize=10; maxSize=24; workQueue=LinkedBlockingQueue[10000]; allowCoreThreadTimeout=false
+Dec-04 18:02:02.396 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 24.10.2 build 5932
+  Created: 27-11-2024 21:23 UTC (28-11-2024 02:53 IDT)
+  System: Linux 5.15.167.4-microsoft-standard-WSL2
+  Runtime: Groovy 4.0.23 on OpenJDK 64-Bit Server VM 17.0.13+11-Ubuntu-2ubuntu122.04
+  Encoding: UTF-8 (UTF-8)
+  Process: 286599@DESKTOP-RMS72VF [127.0.1.1]
+  CPUs: 8 - Mem: 3.7 GB (2.5 GB) - Swap: 1 GB (1 GB)
+Dec-04 18:02:02.445 [main] DEBUG nextflow.Session - Work-dir: /mnt/c/Users/LENOVO/OneDrive/Desktop/work [v9fs]
+Dec-04 18:02:02.447 [main] DEBUG nextflow.Session - Script base path does not exist or is not a directory: /mnt/c/Users/LENOVO/OneDrive/Desktop/bin
+Dec-04 18:02:02.466 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Dec-04 18:02:02.482 [main] DEBUG nextflow.Session - Observer factory: DefaultObserverFactory
+Dec-04 18:02:02.535 [main] DEBUG nextflow.cache.CacheFactory - Using Nextflow cache factory: nextflow.cache.DefaultCacheFactory
+Dec-04 18:02:02.549 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 9; maxThreads: 1000
+Dec-04 18:02:02.695 [main] DEBUG nextflow.Session - Session start
+Dec-04 18:02:03.592 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Dec-04 18:02:03.610 [main] DEBUG n.secret.LocalSecretsProvider - Secrets store: /home/pragati_4bc/.nextflow/secrets/store.json
+Dec-04 18:02:03.624 [main] DEBUG nextflow.secret.SecretsLoader - Discovered secrets providers: [nextflow.secret.LocalSecretsProvider@5b40de43] - activable => nextflow.secret.LocalSecretsProvider@5b40de43
+Dec-04 18:02:03.632 [main] INFO  nextflow.script.BaseScript - /home/pragati_4bc/NGS3Pipeline_Nextflow/sample
+Dec-04 18:02:03.773 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Dec-04 18:02:03.775 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Dec-04 18:02:03.792 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
+Dec-04 18:02:03.808 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=8; memory=3.7 GB; capacity=8; pollInterval=100ms; dumpInterval=5m
+Dec-04 18:02:03.813 [main] DEBUG n.processor.TaskPollingMonitor - >>> barrier register (monitor: local)
+Dec-04 18:02:04.194 [main] WARN  nextflow.script.ScriptBinding - Access to undefined parameter `somatic_folder` -- Initialise it to a default value eg. `params.somatic_folder = some_value`
+Dec-04 18:02:04.206 [main] WARN  nextflow.script.ScriptBinding - Access to undefined parameter `germline_folder` -- Initialise it to a default value eg. `params.germline_folder = some_value`
+Dec-04 18:02:04.208 [main] WARN  nextflow.script.ScriptBinding - Access to undefined parameter `RNA` -- Initialise it to a default value eg. `params.RNA = some_value`
+Dec-04 18:02:04.242 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Dec-04 18:02:04.243 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Dec-04 18:02:04.256 [main] DEBUG nextflow.Session - Workflow process names [dsl2]: upload_bs, Renaming
+Dec-04 18:02:04.257 [main] DEBUG nextflow.Session - Igniting dataflow network (3)
+Dec-04 18:02:04.259 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > Renaming
+Dec-04 18:02:04.270 [PathVisitor-1] DEBUG nextflow.file.PathVisitor - files for syntax: glob; folder: /home/pragati_4bc/NGS3Pipeline_Nextflow/sample/; pattern: *_{R1_001,R2_001}.fastq.gz; options: [checkIfExists:true]
+Dec-04 18:02:04.274 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > upload_bs
+Dec-04 18:02:04.276 [main] DEBUG nextflow.script.ScriptRunner - Parsed script files:
+  Script_58a5e035d61f2054: /mnt/c/Users/LENOVO/OneDrive/Desktop/nextflow_ngs3pipeline.nf
+Dec-04 18:02:04.277 [main] DEBUG nextflow.script.ScriptRunner - > Awaiting termination 
+Dec-04 18:02:04.278 [main] DEBUG nextflow.Session - Session await
+Dec-04 18:02:04.585 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Dec-04 18:02:04.593 [Task submitter] INFO  nextflow.Session - [1f/f20c5d] Submitted process > Renaming
+Dec-04 18:02:04.624 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Dec-04 18:02:04.626 [Task submitter] INFO  nextflow.Session - [27/66983e] Submitted process > upload_bs (1)
+Dec-04 18:02:04.668 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Dec-04 18:02:04.671 [Task submitter] INFO  nextflow.Session - [d5/077228] Submitted process > upload_bs (3)
+Dec-04 18:02:04.715 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Dec-04 18:02:04.718 [Task submitter] INFO  nextflow.Session - [60/8dae80] Submitted process > upload_bs (2)
+Dec-04 18:02:04.793 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 1; name: Renaming; status: COMPLETED; exit: 0; error: -; workDir: /mnt/c/Users/LENOVO/OneDrive/Desktop/work/1f/f20c5d81df26f19a602fea381c5079]
+Dec-04 18:02:04.796 [Task monitor] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'TaskFinalizer' minSize=10; maxSize=24; workQueue=LinkedBlockingQueue[10000]; allowCoreThreadTimeout=false
+Dec-04 18:02:04.807 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 2; name: upload_bs (1); status: COMPLETED; exit: 0; error: -; workDir: /mnt/c/Users/LENOVO/OneDrive/Desktop/work/27/66983ecff29e2ba0e9ef458e60f8a8]
+Dec-04 18:07:04.070 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 2 -- submitted tasks are shown below
+~> TaskHandler[id: 4; name: upload_bs (3); status: RUNNING; exit: -; error: -; workDir: /mnt/c/Users/LENOVO/OneDrive/Desktop/work/d5/077228204a059387890f8d163fe1f5]
+~> TaskHandler[id: 3; name: upload_bs (2); status: RUNNING; exit: -; error: -; workDir: /mnt/c/Users/LENOVO/OneDrive/Desktop/work/60/8dae806c20e6040cdf3ed9d4a6d796]
+Dec-04 18:12:04.121 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 2 -- submitted tasks are shown below
+~> TaskHandler[id: 4; name: upload_bs (3); status: RUNNING; exit: -; error: -; workDir: /mnt/c/Users/LENOVO/OneDrive/Desktop/work/d5/077228204a059387890f8d163fe1f5]
+~> TaskHandler[id: 3; name: upload_bs (2); status: RUNNING; exit: -; error: -; workDir: /mnt/c/Users/LENOVO/OneDrive/Desktop/work/60/8dae806c20e6040cdf3ed9d4a6d796]
+Dec-04 18:17:04.201 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 2 -- submitted tasks are shown below
+~> TaskHandler[id: 4; name: upload_bs (3); status: RUNNING; exit: -; error: -; workDir: /mnt/c/Users/LENOVO/OneDrive/Desktop/work/d5/077228204a059387890f8d163fe1f5]
+~> TaskHandler[id: 3; name: upload_bs (2); status: RUNNING; exit: -; error: -; workDir: /mnt/c/Users/LENOVO/OneDrive/Desktop/work/60/8dae806c20e6040cdf3ed9d4a6d796]
+Dec-04 18:22:04.336 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 2 -- submitted tasks are shown below
+~> TaskHandler[id: 4; name: upload_bs (3); status: RUNNING; exit: -; error: -; workDir: /mnt/c/Users/LENOVO/OneDrive/Desktop/work/d5/077228204a059387890f8d163fe1f5]
+~> TaskHandler[id: 3; name: upload_bs (2); status: RUNNING; exit: -; error: -; workDir: /mnt/c/Users/LENOVO/OneDrive/Desktop/work/60/8dae806c20e6040cdf3ed9d4a6d796]
+Dec-04 18:23:57.570 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 4; name: upload_bs (3); status: COMPLETED; exit: 0; error: -; workDir: /mnt/c/Users/LENOVO/OneDrive/Desktop/work/d5/077228204a059387890f8d163fe1f5]
+Dec-04 18:24:01.949 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 3; name: upload_bs (2); status: COMPLETED; exit: 0; error: -; workDir: /mnt/c/Users/LENOVO/OneDrive/Desktop/work/60/8dae806c20e6040cdf3ed9d4a6d796]
+Dec-04 18:24:01.966 [main] DEBUG nextflow.Session - Session await > all processes finished
+Dec-04 18:24:02.119 [Task monitor] DEBUG n.processor.TaskPollingMonitor - <<< barrier arrives (monitor: local) - terminating tasks monitor poll loop
+Dec-04 18:24:02.121 [main] DEBUG nextflow.Session - Session await > all barriers passed
+Dec-04 18:24:02.250 [main] DEBUG nextflow.util.ThreadPoolManager - Thread pool 'TaskFinalizer' shutdown completed (hard=false)
+Dec-04 18:24:02.324 [main] DEBUG n.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=4; failedCount=0; ignoredCount=0; cachedCount=0; pendingCount=0; submittedCount=0; runningCount=0; retriesCount=0; abortedCount=0; succeedDuration=43m 50s; failedDuration=0ms; cachedDuration=0ms;loadCpus=0; loadMemory=0; peakRunning=4; peakCpus=4; peakMemory=0; ]
+Dec-04 18:24:02.509 [main] DEBUG nextflow.cache.CacheDB - Closing CacheDB done
+Dec-04 18:24:02.638 [main] DEBUG nextflow.util.ThreadPoolManager - Thread pool 'FileTransfer' shutdown completed (hard=false)
+Dec-04 18:24:02.641 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye

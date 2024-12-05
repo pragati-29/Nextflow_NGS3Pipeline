@@ -1,0 +1,8 @@
+#!/bin/bash -ue
+if [[ XH2AT-F1-D-FEV2F2both-S1-S1-L001-S1-S1-L001-S1_S1_L001 =~ -F- ]]; then
+bs upload dataset --project=439358925 XH2AT-F1-D-FEV2F2both-S1-S1-L001-S1-S1-L001-S1_S1_L001_R1_001.fastq.gz XH2AT-F1-D-FEV2F2both-S1-S1-L001-S1-S1-L001-S1_S1_L001_R2_001.fastq.gz
+elif [[ XH2AT-F1-D-FEV2F2both-S1-S1-L001-S1-S1-L001-S1_S1_L001 =~ -B- ]]; then
+bs upload dataset --project=439405970 XH2AT-F1-D-FEV2F2both-S1-S1-L001-S1-S1-L001-S1_S1_L001_R1_001.fastq.gz XH2AT-F1-D-FEV2F2both-S1-S1-L001-S1-S1-L001-S1_S1_L001_R2_001.fastq.gz
+elif [[ XH2AT-F1-D-FEV2F2both-S1-S1-L001-S1-S1-L001-S1_S1_L001 =~ -CT- ]]; then
+bs upload dataset --project=439358924 XH2AT-F1-D-FEV2F2both-S1-S1-L001-S1-S1-L001-S1_S1_L001_R1_001.fastq.gz XH2AT-F1-D-FEV2F2both-S1-S1-L001-S1-S1-L001-S1_S1_L001_R2_001.fastq.gz
+fi

@@ -1,0 +1,2 @@
+/mnt/c/Users/LENOVO/OneDrive/Desktop/work/ad/c12ae21e0195a20f5cb140ae089c44/.command.sh: line 2: [: missing `]'
+[31mERROR[0m: [1m*** lstat *R1_001.fastq.gz: no such file or directory ***[21m[0m

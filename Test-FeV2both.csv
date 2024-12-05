@@ -1,0 +1,11 @@
+Sample_ID_Main,Patient_Name,Test_Name,Sample_Type,Capturing_Kit,Project_name,Project_ID,bed_num_ID,Raw_Name_R1_FastQ,Raw_Name_R2_FastQ,Sample_ID
+,,TARGT_First,DNA,FEV2F2both,Test_NGS3Pipeline_Oct2024,434305877,,,,X9BA9-F-D-L2L1-FEV2F2both
+,,TARGT_First,DNA,FEV2F2both,Test_NGS3Pipeline_Oct2024,434305877,,,,X9CAX-F-D-FEV2F2both
+,,TARGT_First,DNA,FEV2F2both,Test_NGS3Pipeline_Oct2024,434305877,,,,XGAAY-B1B2-cf-D-FEV2F2both
+,,TARGT_First,DNA,FEV2F2both,Test_NGS3Pipeline_Oct2024,434305877,,,,XH2AT-F1-D-FEV2F2both
+,,TARGT_First,DNA,FEV2F2both,Test_NGS3Pipeline_Oct2024,434305877,,,,XH6AF-F1F2F3-D-FEV2F2both
+,,TARGT_First,DNA,FEV2F2both,Test_NGS3Pipeline_Oct2024,434305877,,,,XH6AM-F1-D-FEV2F2both
+,,TARGT_First,DNA,FEV2F2both,Test_NGS3Pipeline_Oct2024,434305877,,,,XHEBZ-B1B2-cf-D-FEV2F2both
+,,TARGT_First,DNA,FEV2F2both,Test_NGS3Pipeline_Oct2024,434305877,,,,XHLAR-B1-cf-D-FEV2F2both
+,,TARGT_First,DNA,FEV2F2both,Test_NGS3Pipeline_Oct2024,434305877,,,,XHMAL-F3F4-D-L2L1-FEV2F2both
+,,TARGT_First,DNA,FEV2F2both,Test_NGS3Pipeline_Oct2024,434305877,,,,XHZAX-F-D-FEV2F2both

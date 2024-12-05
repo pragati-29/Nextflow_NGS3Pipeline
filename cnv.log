@@ -1,0 +1,64 @@
+Starting 24MBC458-CDS-MGI-L001-S1
+##########Starting preparing config file#################
+##########Ending preparing config file#################
+##########Starting CNV Control Freec#################
+Control-FREEC v11.6 : a method for automatic detection of copy number alterations, subclones and for accurate estimation of contamination and main ploidy using deep-sequencing data
+
+	Could not find your config file.. Please, check the existance of 24MBC458-CDS-MGI-L001-S1/config_CNV.txtS
+
+Usage:
+
+	freec -conf <config file>
+
+	See config.txt for example
+	or
+	freec -conf <config file> -sample <mySample.bam> -control <myControl.bam>
+
+	See config.txt for example
+##########Ending CNV Control Freec#################
+##########Starting annotation#################
+Error: Unable to open file 24MBC458-CDS-MGI-L001-S1/24MBC458-CDS-MGI-L001-S1.bam_CNVs. Exiting.
+##########Ending annotation#################
+Starting 22MBC226-Sensitivity-CDS-MGI-L001-S1
+##########Starting preparing config file#################
+##########Ending preparing config file#################
+##########Starting CNV Control Freec#################
+Control-FREEC v11.6 : a method for automatic detection of copy number alterations, subclones and for accurate estimation of contamination and main ploidy using deep-sequencing data
+
+	Could not find your config file.. Please, check the existance of 22MBC226-Sensitivity-CDS-MGI-L001-S1/config_CNV.txtS
+
+Usage:
+
+	freec -conf <config file>
+
+	See config.txt for example
+	or
+	freec -conf <config file> -sample <mySample.bam> -control <myControl.bam>
+
+	See config.txt for example
+##########Ending CNV Control Freec#################
+##########Starting annotation#################
+Error: Unable to open file 22MBC226-Sensitivity-CDS-MGI-L001-S1/22MBC226-Sensitivity-CDS-MGI-L001-S1.bam_CNVs. Exiting.
+##########Ending annotation#################
+Starting 24MBD526-CDS-MGI-L001-S1
+##########Starting preparing config file#################
+##########Ending preparing config file#################
+##########Starting CNV Control Freec#################
+Control-FREEC v11.6 : a method for automatic detection of copy number alterations, subclones and for accurate estimation of contamination and main ploidy using deep-sequencing data
+
+	Could not find your config file.. Please, check the existance of 24MBD526-CDS-MGI-L001-S1/config_CNV.txtS
+
+Usage:
+
+	freec -conf <config file>
+
+	See config.txt for example
+	or
+	freec -conf <config file> -sample <mySample.bam> -control <myControl.bam>
+
+	See config.txt for example
+##########Ending CNV Control Freec#################
+##########Starting annotation#################
+Error: Unable to open file 24MBD526-CDS-MGI-L001-S1/24MBD526-CDS-MGI-L001-S1.bam_CNVs. Exiting.
+##########Ending annotation#################
+################## ALL FILES ARE DONE ###########################
