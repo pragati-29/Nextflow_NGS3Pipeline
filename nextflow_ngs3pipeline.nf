@@ -11,7 +11,7 @@ params.sam_pattern = ["CT","ct","ST8","st8","F","B","CE","SE8","FEV2F2","Z"]
 process Renaming {
 
     script:
-	""" echo "hello" > out1.txt"""
+	""" echo "hello" > out_test.txt"""
 //"""python3 /media/bioinfoa/bioinfo2/Pragati/NGS3Pipeline_Nextflow/Rename_combined.py "${params.input_dir}"
 //"""
 }
