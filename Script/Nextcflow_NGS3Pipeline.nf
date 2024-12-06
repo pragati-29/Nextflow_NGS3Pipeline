@@ -3,10 +3,9 @@ params.input_dir = "/home/pragati_4bc/NGS3Pipeline_Nextflow/sample"
 params.reads = "$params.input_dir/*_{R1_001,R2_001}.fastq.gz"
 println "${params.input_dir}"
 params.output_dir = "/home/pragati_4bc/NGS3Pipeline_Nextflow/Output"
-//params.project_id_file = "/media/bioinfoa/bioinfo2/Pragati/NGS3Pipeline_Nextflow/project_ids.txt"
-params.project_id_DNA_somatic = "" //"439652214"
-params.project_id_DNA_Germline = "" //"439405970"
-params.project_id_RNA = "" //"439358924"
+params.project_id_DNA_somatic = "439652214"
+params.project_id_DNA_Germline = "439405970"
+params.project_id_RNA = "439358924"
 process Renaming {
 
     script:
@@ -15,13 +14,8 @@ process Renaming {
 //"""
 }
 process upload_bs{
-    publishDir params.somatic_folder, mode:"copy"
-    publishDir params.germline_folder, mode:"copy"
-    publishDir params.RNA, mode:"copy"
 input:
     tuple val(sample_id), path(reads)
-output:
-    "*"
 script:
 """
  shopt -s nocasematch
