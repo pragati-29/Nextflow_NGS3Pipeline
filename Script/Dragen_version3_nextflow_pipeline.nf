@@ -1,5 +1,4 @@
 params.input_dir = "/home/pragati_4bc/NGS3Pipeline_Nextflow/Dragen_val_sample"
-params.reads = "$params.input_dir/*_{R1_001,R2_001}.fastq.gz"
 params.bs_samp_list = "/home/pragati_4bc/NGS3Pipeline_Nextflow/Dragen_val_sample/bs_project_list.txt"
 params.sample_file = "/home/pragati_4bc/NGS3Pipeline_Nextflow/Dragen_val_sample/test_ngs3_nextflow_Copy.csv"
 //params.bed_file = "/home/pragati_4bc/NGS3Pipeline_Nextflow/sample/sample/TarGT_First_v2_FEV2F2both_cnv_coverage.bed"
