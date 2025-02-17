@@ -1,0 +1,5 @@
+Test_Name,Sample_Type,Capturing_Kit,Project_name,Sample_ID,Project_ID,Biosample_ID,appsession_name,bed_id,liquid_tumor,vc-af-call-threshold,vc-af-filter-threshold,cnv_baseline_Id,baseline-noise-bed
+TARGT_First,DNA,FEV2F2both,Dragen_Version_Testing_v4,XLXAJ-F-D-FEV2F2both-val-S1,442992551,736436701,,,,,,,
+TARGT_First,DNA,FEV2F2both,Dragen_Version_Testing_v4,XAEAF-F1F2-D-FEV2F2both-val-ITE,442992551,736435701,,,,,,,
+TARGT_First,DNA,FEV2F2both,Dragen_Version_Testing_v4,XLXAE-F1-D-L2L1-FEV2F2both-val-S1,442992551,736424694,,,,,,,
+TARGT_First,DNA,FEV2F2both,Dragen_Version_Testing_v4,XL7A2-F-D-FEV2F2both-val-S1,442992551,736435702,,,,,,,
