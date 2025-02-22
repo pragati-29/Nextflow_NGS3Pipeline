@@ -8,11 +8,13 @@ import pandas as pd
 parser = argparse.ArgumentParser(description="Rename files in the specified folder with custom rules.")
 parser.add_argument("folder", type=str, help="Path to the folder containing the files to rename.")
 parser.add_argument("csv_file", type=str, help="Path to the CSV file containing sample names to rename.")
+parser.add_argument("output_csv", type=str, help="Path to save the updated CSV file.")
 args = parser.parse_args()
 
 # Get folder path and CSV file path
 folder_path = args.folder
 csv_file = args.csv_file
+output_csv = args.output_csv
 
 # Check if the folder exists
 if not os.path.isdir(folder_path):
@@ -27,54 +29,74 @@ if not os.path.isfile(csv_file):
 # Read sample names from the CSV
 try:
     sample_df = pd.read_csv(csv_file)
-    sample_names = set(sample_df.iloc[:, 4].astype(str))  # Assuming first column contains sample names
+
+    # Ensure CSV has the expected structure
+    if "file_name" not in sample_df.columns:
+        print("Error: CSV must contain 'file_name' column.")
+        exit(1)
+
+    sample_names = set(sample_df["file_name"].astype(str))
 except Exception as e:
     print(f"Error reading CSV file: {e}")
     exit(1)
 
 # List all files in the folder
 filenames = os.listdir(folder_path)
+renamed_files = {}  # Dictionary to store original-to-new filename mapping
 
 # Process each file in the folder
 for filename in filenames:
-    old_filename = os.path.join(folder_path, filename)  # Full path to the original file
+    old_filepath = os.path.join(folder_path, filename)
 
     # Skip directories
-    if not os.path.isfile(old_filename):
+    if not os.path.isfile(old_filepath):
         continue
 
-    # Check if file is already renamed (contains "_S1_L001_R1_001" or "_S1_L001_R2_001")
+    # Check if file is already renamed
     if "_S1_L001_R1_001" in filename or "_S1_L001_R2_001" in filename:
-        continue  # Skip already renamed files
+        sample_name = filename.split("_")[0]
+        renamed_files[sample_name] = filename.split("_")[0]  # Store already renamed files
+        continue
 
-    # Extract sample name (assuming it's the first part before "_R1" or "_R2")
-    sample_name = filename.split("_R1")[0] if "_R1" in filename else filename.split("_R2")[0]
-    
-    # Check if sample is in the CSV list
+    # Extract sample name safely
+    if "_R1" in filename:
+        sample_name = filename.split("_R1")[0]
+    elif "_R2" in filename:
+        sample_name = filename.split("_R2")[0]
+    else:
+        sample_name = filename.split("_")[0]  # Default extraction
+
+    # Check if sample is in CSV list
     if sample_name not in sample_names:
-        continue  # Skip files that are not in the CSV
+        continue
 
-    # Start transformations
-    new_filename = filename
+    # Apply renaming rules
+    new_filename = filename.replace("_001", "").replace("_", "-")
 
-    # Add -S1 before _R1 or _R2
-    if '_R1' in filename:
-        new_filename = new_filename.replace('_R1', '-S1_R1')
-    if '_R2' in filename:
-        new_filename = new_filename.replace('_R2', '-S1_R2')
+    if "-R1" in new_filename:
+        new_filename = new_filename.replace("-R1", "_S1_L001_R1_001")
+    if "-R2" in new_filename:
+        new_filename = new_filename.replace("-R2", "_S1_L001_R2_001")
 
-    # Remove "_001" and replace "_" with "-"
-    new_filename = new_filename.replace("_001", "")
-    new_filename = new_filename.replace("_", "-")
+    # Ensure the new filename does not already exist
+    new_filepath = os.path.join(folder_path, new_filename)
+    if os.path.exists(new_filepath):
+        print(f"Skipping: {new_filepath} already exists.")
+        continue
 
-    # Apply detailed renaming rules for R1 and R2
-    new_filename = new_filename.replace("-R1.", "_S1_L001_R1_001.")
-    new_filename = new_filename.replace("-R2.", "_S1_L001_R2_001.")
-
-    # Full path for the new filename
-    new_filename = os.path.join(folder_path, new_filename)
+    # Store mapping
+    renamed_files[sample_name] = new_filename.split("_")[0] 
 
     # Rename the file
-    os.rename(old_filename, new_filename)
+    os.rename(old_filepath, new_filepath)
+    print(f"Renamed: {old_filepath} -> {new_filepath}")
 
-    print(f"Renamed: {old_filename} -> {new_filename}")
+# Update sample_df with new names
+sample_df["Sample_ID"] = sample_df["file_name"].map(renamed_files)
+
+# Replace NaN values with "Not Found"
+sample_df["Sample_ID"].fillna("Not Found", inplace=True)
+
+# Save the updated DataFrame
+sample_df.to_csv(output_csv, index=False)
+print(f"Updated filenames saved to {output_csv}")
