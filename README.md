@@ -18,15 +18,21 @@ This script defines a Nextflow pipeline used for processing and uploading sequen
       chmod +x nextflow
    
 ### Input:
-  * Rename_combined.py file
   * Folder of fastq files (All types)
-  * Project Ids for Germline, Somatic, and RNA
+  * csv file
+  * Output Folder
 ### Output:
   * Renaming of samples for uploading on basespace
   * Uploaded samples in basespace projects 
 ### Sections of the Script:
 #### Parameter Definitions
     Parameters in Nextflow scripts provide configurable values that can be adjusted without modifying the core script logic.
+####  Process
+     * Renaming
+     * extract_and_upload_samples
+     * preprocessing_for_launch
+     * bs_launch
+    
     
 
     
