@@ -1,11 +1,14 @@
 params.input_dir = "/home/pragati_4bc/NGS3Pipeline_Nextflow/fastq_test_Nextflow"
 params.sample_file = "/home/pragati_4bc/NGS3Pipeline_Nextflow/fastq_test_Nextflow/test_ngs3_nextflow_Copy.csv"
-params.output_dir = "c"
+params.output_dir = "output"
 process Renaming{
+    publishDir params.output_dir, mode:'copy'
+    output:
+        path "output.csv"
     script:
-        """
-        Rename_combined.py "${params.input_dir}" "${params.sample_file}" 
-        """
+    """
+    Rename_combined.py "${params.input_dir}" "${params.sample_file}" "output.csv"
+    """
 }
 process extract_and_upload_samples {
     publishDir params.output_dir, mode:'copy'
@@ -99,7 +102,7 @@ process bs_launch{
     grouped_samp=file1.groupby(["Capturing_Kit","Somatic_Germline"])["Biosample_ID"].apply(lambda x: ",".join(map(str, map(int, x))))
     for test_name,capr_kit,proj_id, appsession_name, bed_id, liq_tm,vc_af_call, vc_af_filt,cnv_base,noise_base,germ_som , vc_type in zip(file1['Test_Name'],file1['Capturing_Kit'],file1['Project_ID'],file1['appsession_name'],file1['bed_id'],file1['liquid_tumor'],file1['vc-af-call-threshold'],file1['vc-af-filter-threshold'],file1['cnv_baseline_Id'],file1['baseline-noise-bed'],file1['Somatic_Germline'],file1['vc_type']):
         if "somatic" in germ_som:
-            if "TARGT_FIRST" in test_name:
+            if "TARGET_FIRST" in test_name:
                 if "FEV2F2both" in capr_kit:
                     biosamp_FEV2 =", ".join(map(str, [grouped_samp.loc["FEV2F2both", "somatic"]]))
                     command_bs_launch = f"bs launch application -n" +f' "DRAGEN Enrichment"' + f" --app-version 3.9.5 -o project-id:{proj_id} -o app-session-name:{appsession_name} -l {appsession_name} -o vc-type:{vc_type} -o ht-ref:hg19-altaware-cnv-anchor.v8 -o fixed-bed:custom -o target_bed_id:{bed_id} -o input_list.sample-id:biosamples/{biosamp_FEV2} -o picard_checkbox:1 -o liquid_tumor:{liq_tm} -o af-filtering:1 -o vc-af-call-threshold:{vc_af_call} -o vc-af-filter-threshold:{vc_af_filt} -o sv_checkbox:1 -o sq-filtering:1 -o tmb:1 -o vc-hotspot:27723066652 -o vcf-site-filter:1 -o hla:1 -o nirvana:1 -o commandline-disclaimer:true -o arbitrary:"+f'"--read-trimmers:adapter --trim-adapter-read1"' + f" -o additional-file:25600057590 -o automation-sex:unknown"
@@ -164,7 +167,7 @@ process bs_launch{
 }
 workflow {
     Renaming() 
-    //extract_and_upload_samples(params.sample_file)
+    //extract_and_upload_samples(Renaming.out)
     //preprocessing_for_launch(extract_and_upload_samples.out)
     //bs_launch(preprocessing_for_launch.out)
 }
