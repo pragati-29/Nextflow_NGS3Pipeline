@@ -74,8 +74,8 @@ process preprocessing_for_launch {
     baseline_noise_se8 = "baseline-noise-bed:25849773923"
     input_file = "${sample_file}"
     df = pd.read_csv(input_file)
-    pattern_B = re.compile(r"-B[0-9]+|BB[0-9]+|B[0-9]+|-B")
-    pattern_F = re.compile(r"-F[0-9]+|FF[0-9]+|F[0-9]+|-F")
+    pattern_B = re.compile(r"-B[0-9]+|BB[0-9]+|B[0-9]+|-B",re.IGNORECASE)
+    pattern_F = re.compile(r"-F[0-9]+|FF[0-9]+|F[0-9]+|-F",re.IGNORECASE)
     df["bed_id"] = df["Capturing_Kit"].map(bed_id_mapping)
     df["liquid_tumor"] = df["Sample_ID"].apply(lambda x: 1 if "-cf-" in x.lower() else 0) 
     df["vc_type"] = df["Sample_ID"].apply(lambda x: 0 if pattern_B.search(x) else 1)
