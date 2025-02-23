@@ -1,4 +1,4 @@
-# Nextflow_NGS3Pipelin 
+# Nextflow_NGS3Pipeline 
 ## Aim:- Implementation of NGS3Pipeline in Nextflow 
 ## Overview 
 This script defines a Nextflow pipeline used for processing, uploading and analysis of sequencing data. It handles renaming files and uploading datasets to BaseSpace projects based on specific sample naming conventions and their analysis. The workflow is structured around parameter definitions, individual processes, and a workflow definition. 
