@@ -12,7 +12,7 @@ This script defines a Nextflow pipeline used for processing, uploading and analy
     * datetime 
   * Basespace Illumina access
   * Java (For Nextflow installation)
-### Nextflow installation
+## Nextflow installation
   * Install SDKMAN:
       curl -s https://get.sdkman.io | bash
   * Install JAVA:
@@ -22,16 +22,19 @@ This script defines a Nextflow pipeline used for processing, uploading and analy
   * Make Nextflow executable:
       chmod +x nextflow
   * sudo mv nextflow /usr/local/bin/
-   
-### Input:
+## Clone gitHub repository
+   - Go to Source Control of VS Code
+   - Click on clone
+   - Paste link of your repository 
+## Input:
   * Folder of fastq files (All types)
   * csv file
   * Output Folder
-### Output:
+## Output:
   * Renaming of samples for uploading in basespace
   * Uploaded samples in basespace projects
   * Analysis of samples
-### Sections of the Script:
+## Sections of the Script:
 #### Parameter Definitions
     params.input_dir 
     params.sample_file 
@@ -40,7 +43,7 @@ This script defines a Nextflow pipeline used for processing, uploading and analy
      Renaming 
         Input: "${params.input_dir}" "${params.sample_file}" "output.csv" 
         Output: "output.csv" 
-        (For renaming we are using Rename_combined.py file which is present in bin folder of this repository, please keep this file in bin folder only) 
+        (For renaming we are using Rename_combined.py file which is present in bin folder of this repository, please keep this file in bin folder only and give permission using chmod +x.) 
      extract_and_upload_samples 
         Input: "output.csv" 
         Output: "new_file_test.csv" 
@@ -50,7 +53,7 @@ This script defines a Nextflow pipeline used for processing, uploading and analy
      bs_launch   
         Input: "test_file.csv" 
         Output: stdout 
-### Process to run Nextflow NGSpipline
+## Process to run Nextflow NGSpipline
  #### Create CSV file
     test_ngs3_nextflow_Copy.csv 
     Please be careful when providing sample ids
