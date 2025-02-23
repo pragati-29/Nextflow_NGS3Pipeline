@@ -69,6 +69,8 @@ This script defines a Nextflow pipeline used for processing, uploading and analy
       3. Capturing_Kit:- GE,CE,SE8,FEV2F2both
   #### Run script from terminal
      nextflow run Path/project_names_using_csv_file_ngs3_nextflow.nf --input_dir path/input_folder --sample_file path/test_ngs3_nextflow_Copy.csv --output_dir path/output_folder
+  
+  #### Steps for running nextflow script: https://docs.google.com/document/d/18IB0OyzrwdjB-TRqhlxHC4fQSoJ3cr750b5wpTMfFBs/edit?tab=t.0
   ### Note: RNA (CT and ST8) and Fe are not included yet
 
 
