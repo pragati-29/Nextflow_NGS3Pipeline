@@ -39,6 +39,7 @@ This script defines a Nextflow pipeline used for processing, uploading and analy
      Renaming 
         Input: "${params.input_dir}" "${params.sample_file}" "output.csv" 
         Output: "output.csv" 
+        (For renaming we are using Rename_combined.py file which is present in bin folder of this repository, please keep this file in bin folder only) 
      extract_and_upload_samples 
         Input: "output.csv" 
         Output: "new_file_test.csv" 
