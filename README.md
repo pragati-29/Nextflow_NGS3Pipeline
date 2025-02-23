@@ -21,6 +21,7 @@ This script defines a Nextflow pipeline used for processing, uploading and analy
       curl -s https://get.nextflow.io | bash
   * Make Nextflow executable:
       chmod +x nextflow
+  * sudo mv nextflow /usr/local/bin/
    
 ### Input:
   * Folder of fastq files (All types)
