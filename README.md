@@ -22,7 +22,7 @@ This script defines a Nextflow pipeline used for processing, uploading and analy
   * Make Nextflow executable:
       chmod +x nextflow
   * sudo mv nextflow /usr/local/bin/
-## Clone gitHub repository
+## Clone GitHub repository
    - Go to Source Control of VS Code
    - Click on clone
    - Paste link of your repository 
