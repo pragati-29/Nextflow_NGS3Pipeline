@@ -4,3 +4,5 @@
 *.nextflow
 *.csv
 Test_again
+history
+.nextflow.log*
