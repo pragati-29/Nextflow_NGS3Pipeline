@@ -19,7 +19,7 @@ process extract_and_upload_samples {
         path "new_file_test.csv"
     script:
     """
-    #!/usr/bin/env python
+    #!/usr/bin/env python3
     import pandas as pd
     import subprocess
     var1 = pd.read_csv("${sample_file}")
@@ -60,7 +60,7 @@ process preprocessing_for_launch {
         path "test_file.csv"
     script:
     """
-    #!/usr/bin/env python
+    #!/usr/bin/env python3
     import pandas as pd
     import csv
     import re
@@ -95,7 +95,7 @@ process bs_launch{
         stdout
     script:
     """
-    #!/usr/bin/env python
+    #!/usr/bin/env python3
     import pandas as pd
     import subprocess
     file1 = pd.read_csv("${sample_file}")
