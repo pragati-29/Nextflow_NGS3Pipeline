@@ -1,12 +1,8 @@
 params.input_dir = "/home/pragati_4bc/NGS3Pipeline_Nextflow/fastq_test_Nextflow"
 params.sample_file = "/home/pragati_4bc/NGS3Pipeline_Nextflow/fastq_test_Nextflow/test_ngs3_nextflow_Copy.csv"
 params.output_dir = "output"
-<<<<<<< HEAD
 params.project = "old"
 params.project_name = "New_Project"
-// #!/usr/bin/env python3 || /usr/bin/env python
-=======
->>>>>>> 5de608494a0123e284b39c167b2b746b85498c78
 process Renaming{
     publishDir params.output_dir, mode:'copy'
     output:
@@ -15,7 +11,6 @@ process Renaming{
     """
     Rename_combined.py "${params.input_dir}" "${params.sample_file}" "output.csv"
     """
-<<<<<<< HEAD
 }
 process create_project{
     input: 
@@ -39,8 +34,6 @@ process create_project{
         file["Project_name"] = project_names
         file.to_csv("created_proj.csv", index=False)
     """
-=======
->>>>>>> 5de608494a0123e284b39c167b2b746b85498c78
 }
 process extract_and_upload_samples {
     publishDir params.output_dir, mode:'copy'
@@ -51,7 +44,7 @@ process extract_and_upload_samples {
         path "new_file_test.csv"
     script:
     """
-    #!/usr/bin/env python
+    #!/usr/bin/env python3
     import pandas as pd
     import subprocess
     var1 = pd.read_csv("${sample_file}")
@@ -92,7 +85,7 @@ process preprocessing_for_launch {
         path "test_file.csv"
     script:
     """
-    #!/usr/bin/env python
+    #!/usr/bin/env python3
     import pandas as pd
     import csv
     import re
@@ -106,13 +99,8 @@ process preprocessing_for_launch {
     baseline_noise_se8 = "baseline-noise-bed:25849773923"
     input_file = "${sample_file}"
     df = pd.read_csv(input_file)
-<<<<<<< HEAD
-    pattern_B = re.compile(r"-B[0-9]+|BB[0-9]+|B[0-9]+|-B",)
-    pattern_F = re.compile(r"-F[0-9]+|FF[0-9]+|F[0-9]+|-F")
-=======
     pattern_B = re.compile(r"-B[0-9]+|BB[0-9]+|B[0-9]+|-B",re.IGNORECASE)
     pattern_F = re.compile(r"-F[0-9]+|FF[0-9]+|F[0-9]+|-F",re.IGNORECASE)
->>>>>>> 5de608494a0123e284b39c167b2b746b85498c78
     df["bed_id"] = df["Capturing_Kit"].map(bed_id_mapping)
     df["liquid_tumor"] = df["Sample_ID"].apply(lambda x: 1 if "-cf-" in x.lower() else 0) 
     df["vc_type"] = df["Sample_ID"].apply(lambda x: 0 if pattern_B.search(x) else 1)
@@ -203,18 +191,13 @@ process bs_launch{
     """
 }
 workflow {
-<<<<<<< HEAD
     Renaming()
     if (params.project == "new") {
         project_output = create_project(Renaming.out, params.project_name)
     } else {
         project_output = params.sample_file
     }
-    //extract_and_upload_samples(project_output)
-=======
-    Renaming() 
-    //extract_and_upload_samples(Renaming.out)
->>>>>>> 5de608494a0123e284b39c167b2b746b85498c78
-    //preprocessing_for_launch(extract_and_upload_samples.out)
-    //bs_launch(preprocessing_for_launch.out)
+    extract_and_upload_samples(project_output)
+    preprocessing_for_launch(extract_and_upload_samples.out)
+    bs_launch(preprocessing_for_launch.out)
 }
