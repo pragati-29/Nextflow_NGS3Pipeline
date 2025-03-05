@@ -2,3 +2,5 @@
 *.command*
 *.exitcode*
 *.nextflow
+*.csv
+Test_again
