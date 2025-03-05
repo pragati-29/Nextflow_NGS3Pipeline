@@ -167,7 +167,7 @@ process bs_launch{
 }
 workflow {
     Renaming() 
-    //extract_and_upload_samples(Renaming.out)
-    //preprocessing_for_launch(extract_and_upload_samples.out)
-    //bs_launch(preprocessing_for_launch.out)
+    extract_and_upload_samples(Renaming.out)
+    preprocessing_for_launch(extract_and_upload_samples.out)
+    bs_launch(preprocessing_for_launch.out)
 }
