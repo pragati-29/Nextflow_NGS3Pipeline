@@ -28,9 +28,9 @@ for i, j in zip(var1['Project_name'], var1['Sample_ID']):
     project_ids.append(project_id)
     
     command1 = f"bs upload dataset --project={project_id} {args.input_dir}/{j}_S1_L001_R1_001.fastq.gz {args.input_dir}/{j}_S1_L001_R2_001.fastq.gz"
-    #result1 = subprocess.run(command1, shell=True, capture_output=True, text=True)
-    #print(result1.stdout)
-    #print(command1)
+    result1 = subprocess.run(command1, shell=True, capture_output=True, text=True)
+    print(result1.stdout)
+    print(command1)
     
     command_biosamp = "bs get biosample -n " + str(j) + " –terse | grep Id | head -1 | grep -Eo '[0-9]{1,}'"
     biosamp_run = subprocess.run(command_biosamp, shell=True, capture_output=True, text=True)
