@@ -9,6 +9,7 @@ process Renaming{
         path "output.csv"
     script:
     """
+    chmod +x bin/*.py
     Rename_combined.py "${params.input_dir}" "${params.sample_file}" "output.csv"
     """
 }
