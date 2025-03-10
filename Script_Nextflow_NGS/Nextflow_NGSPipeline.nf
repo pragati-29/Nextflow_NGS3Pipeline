@@ -63,7 +63,7 @@ workflow {
     if (params.project == "new") {
         project_output = create_project(Renaming.out, params.project_name)
     } else {
-        project_output = params.sample_file
+        project_output = Renaming.out
     }
     extract_and_upload_samples(project_output)
     preprocessing_for_launch(extract_and_upload_samples.out)
