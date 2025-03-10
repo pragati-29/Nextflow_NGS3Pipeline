@@ -68,7 +68,7 @@ This script defines a Nextflow pipeline used for processing, uploading and analy
       1. Test_Name:- INDIEGENE, TARGET_FIRST, ABSOLUTE (capital letter)
       2. Sample_Type:- DNA
       3. Capturing_Kit:- GE,CE,SE8,FEV2F2both
-      Note- Use test_file_for_nextflow.py file to create csv file if you do not want to create manually. Provide Project Id and recheck sample name.
+      Note- Use test_file_for_nextflow.py file to create csv file if you do not want to create manually. Provide Project name and recheck sample name.
   #### Run script from terminal
      nextflow run Path/project_names_using_csv_file_ngs3_nextflow.nf --input_dir path/input_folder --sample_file path/test_ngs3_nextflow_Copy.csv --output_dir path/output_folder
    
