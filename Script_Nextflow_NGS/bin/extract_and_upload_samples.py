@@ -2,6 +2,7 @@
 import pandas as pd
 import subprocess
 import argparse
+import time
 import os
 
 parser = argparse.ArgumentParser(description="Extract project and biosample IDs, upload datasets, and generate a CSV output.")
@@ -31,7 +32,7 @@ for i, j in zip(var1['Project_name'], var1['Sample_ID']):
     result1 = subprocess.run(command1, shell=True, capture_output=True, text=True)
     print(result1.stdout)
     print(command1)
-    
+    time.sleep(15)
     command_biosamp = "bs get biosample -n " + str(j) + " –terse | grep Id | head -1 | grep -Eo '[0-9]{1,}'"
     biosamp_run = subprocess.run(command_biosamp, shell=True, capture_output=True, text=True)
     biosample_id = biosamp_run.stdout.strip()
