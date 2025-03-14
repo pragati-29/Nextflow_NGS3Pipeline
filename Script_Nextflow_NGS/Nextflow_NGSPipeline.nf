@@ -21,7 +21,7 @@ process create_project{
         path "created_proj.csv"
     script:
     """
-    Create_project.py --sample_file "${sample_file}" --project_name "${project_name}"
+    Create_project.py --sample_file "${sample_file}" --project_name "${project_name}" "created_proj.csv"
     """
 }
 process extract_and_upload_samples {
