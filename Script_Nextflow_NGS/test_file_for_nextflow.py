@@ -22,8 +22,9 @@ df.loc[df["file_name"].str.contains(r"(?i)([_-]|^)CEFu([_-]|$)", na=False), "Cap
 df.loc[df["file_name"].str.contains(r"(?i)([_-]|^)CDS([_-]|$)", na=False), "Capturing_Kit"] = "CDS"
 df.loc[df["file_name"].str.contains(r"(?i)([_-]|^)CT([_-]|$)", na=False), "Capturing_Kit"] = "CT"
 df.loc[df["file_name"].str.contains(r"(?i)([_-]|^)ST8([_-]|$)", na=False), "Capturing_Kit"] = "ST8"
-df.loc[~df["file_name"].str.contains(r"(?i)[_-]CT[_-]|[_-]ST8[_-]", na=False), "Sample_Type"] = "DNA"
-df.loc[df["file_name"].str.contains(r"(?i)[_-]CT[_-]|[_-]ST8[_-]", na=False), "Sample_Type"] = "RNA"
+df.loc[~df["file_name"].str.contains(r"(?i)[_-]CT[_-]|[_-]ST8([_-]|$)", na=False), "Sample_Type"] = "DNA"
+df.loc[df["file_name"].str.contains(r"(?i)CT|ST8", na=False), "Sample_Type"] = "RNA"
+
 
 # Fill Test_Name
 df.loc[df["Capturing_Kit"] == "GE", "Test_Name"] = "INDIEGENE"
