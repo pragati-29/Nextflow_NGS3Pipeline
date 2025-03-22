@@ -19,8 +19,8 @@ def process_file(input_file, output_file):
     
     df["bed_id"] = df["Capturing_Kit"].map(bed_id_mapping)
     df["liquid_tumor"] = df["Sample_ID"].apply(lambda x: 1 if "-cf-" in x.lower() else 0)
-    df["vc_type"] = df["Sample_ID"].apply(lambda x: 0 if pattern_B.search(x) else 1)
-    df["Somatic_Germline"] = df["Sample_ID"].apply(lambda x: "germline" if pattern_B.search(x) else ("somatic" if pattern_F.search(x) else "unknown"))
+    df["vc_type"] = df["Sample_ID"].apply(lambda x: 0 if pattern_B.search(x) and "cf" not in x else 1)
+    df["Somatic_Germline"] = df["Sample_ID"].apply(lambda x: "germline" if pattern_B.search(x) and "cf" not in x else ("somatic" if pattern_F.search(x) or "cf" in x else "unknown"))
     df["appsession_name"] = df.apply(lambda row: f"{current_date}_{row['Test_Name']}_{row['Sample_Type']}_{row['Capturing_Kit']}_{row['Somatic_Germline']}", axis=1)
     df["vc-af-call-threshold"] = df["Sample_ID"].apply(lambda x: 1 if "-cf-" in x else 5)
     df["vc-af-filter-threshold"] = df["Sample_ID"].apply(lambda x: 5 if "-cf-" in x else 10)
