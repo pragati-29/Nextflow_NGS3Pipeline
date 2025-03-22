@@ -24,14 +24,13 @@ def main():
                     f"-o project-id:{proj_id} -o app-session-name:{appsession_name} -l {appsession_name} "
                     f"-o vc-type:{vc_type} -o ht-ref:hg19-altaware-cnv-anchor.v8 -o fixed-bed:custom "
                     f"-o target_bed_id:{bed_id} -o input_list.sample-id:biosamples/{biosamp_CDS} "
-                    f"-o picard_checkbox:1 -o liquid_tumor:{liq_tm} -o af-filtering:1 "
+                    f"-o picard_checkbox:1 -o af-filtering:1 "
                     f"-o vc-af-call-threshold:{vc_af_call} -o vc-af-filter-threshold:{vc_af_filt} "
                     f"-o sv_checkbox:1 -o sq-filtering:1 -o tmb:1 -o vc-hotspot:27723066652 -o vcf-site-filter:1 "
                     f"-o hla:1 -o nirvana:1 -o commandline-disclaimer:true "
                     f"-o arbitrary:'--read-trimmers:adapter --trim-adapter-read1' "
                     f"-o additional-file:25600057590 -o automation-sex:unknown"
                 )
-                print(command_bs_launch)
                 bs_launch_run = subprocess.run(command_bs_launch, shell=True, capture_output=True, text=True)
                 print("STDOUT:", bs_launch_run.stdout)
                 print("STDERR:", bs_launch_run.stderr)
