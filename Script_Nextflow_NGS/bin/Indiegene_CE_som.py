@@ -35,6 +35,7 @@ for test_name, capr_kit, proj_id, appsession_name, bed_id, liq_tm, vc_af_call, v
     if "somatic" in germ_som and "INDIEGENE" in test_name and "DNA" in sample_type:
         if capr_kit == "CE":
             biosamp_CE_som = ", ".join(map(str, [grouped_samp.loc["CE", "somatic"]]))
+            bed_id = int(bed_id)
             command_bs_launch = (
                 f'bs launch application -n "DRAGEN Enrichment" '
                 f"--app-version 3.9.5 -o project-id:{proj_id} "
