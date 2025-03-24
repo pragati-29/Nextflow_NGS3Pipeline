@@ -18,7 +18,7 @@ for test_name, capr_kit, proj_id, appsession_name, bed_id, liq_tm, vc_af_call, v
     if germ_som == "germline" and test_name == "ABSOLUTE" and sample_type == "DNA":
         print(germ_som)
         if capr_kit == "SE8":
-            biosamp_SE8_germ = (", ".join(map(str, [grouped_samp.loc["SE8", "germline"]])))
+            biosamp_SE8_germ = ", ".join(map(str, [grouped_samp.loc["SE8", "germline"]]))
             print(biosamp_SE8_germ)
             bed_id=int(bed_id)
             command_bs_launch = (
