@@ -19,6 +19,7 @@ def main():
         if "somatic" in germ_som and "TARGET_FIRST" in test_name and "DNA" in sample_type:
             if "CDS" in capr_kit:
                 biosamp_CDS = ",".join(map(str, [grouped_samp.loc["CDS", "somatic"]]))
+                bed_id = int(bed_id)
                 command_bs_launch = (
                     f"bs launch application -n 'DRAGEN Enrichment' --app-version 3.9.5 "
                     f"-o project-id:{proj_id} -o app-session-name:{appsession_name} -l {appsession_name} "
