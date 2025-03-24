@@ -37,6 +37,7 @@ for test_name, capr_kit, proj_id, appsession_name, bed_id, liq_tm, vc_af_call, v
         if capr_kit == "CEFu":
             print(capr_kit)
             biosamp_CE_som = ", ".join(map(str, [grouped_samp.loc["CEFu", "somatic"]]))
+            bed_id = int(bed_id)
             command_bs_launch = (
                 f'bs launch application -n "DRAGEN Enrichment" '
                 f"--app-version 3.9.5 -o project-id:{proj_id} "
