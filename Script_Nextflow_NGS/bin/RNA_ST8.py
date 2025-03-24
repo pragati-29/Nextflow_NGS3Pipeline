@@ -28,6 +28,7 @@ for test_name, capr_kit, proj_id, appsession_name, bed_id, liq_tm, vc_af_call, v
 ):
     if "somatic" in germ_som and "ABSOLUTE" in test_name and "ST8" in capr_kit and "RNA" in sample_type:
         biosamp_ST8_germ = ", ".join(map(str, [grouped_samp.loc["ST8", "somatic"]]))
+        bed_id = int(bed_id)
         command_bs_launch = (
             f'bs launch application -n "DRAGEN RNA Pipeline" '
             f"--app-version 3.6.3 -o project-id:{proj_id} "
