@@ -15,7 +15,7 @@ for test_name, capr_kit, proj_id, appsession_name, bed_id, liq_tm, vc_af_call, v
     file1['bed_id'], file1['liquid_tumor'], file1['vc-af-call-threshold'], file1['vc-af-filter-threshold'], 
     file1['cnv_baseline_Id'], file1['baseline-noise-bed'], file1['Somatic_Germline'], file1['vc_type'], file1['Sample_Type']):
 
-    if germ_som == "somatic" and test_name == "ABSOLUTE" and "sample_type" == "DNA":
+    if germ_som == "somatic" and test_name == "ABSOLUTE" and sample_type == "DNA":
         if capr_kit == "SE8":
             biosamp_SE8_som = ", ".join(map(str, [grouped_samp.loc["SE8", "somatic"]]))
             command_bs_launch = (
