@@ -18,7 +18,9 @@ for test_name, capr_kit, proj_id, appsession_name, bed_id, liq_tm, vc_af_call, v
     if germ_som == "germline" and test_name == "ABSOLUTE" and sample_type == "DNA":
         print(germ_som)
         if capr_kit == "SE8":
-            biosamp_SE8_germ = ", ".join(map(str, [grouped_samp.loc["SE8", "germline"]]))
+            biosamp_SE8_germ = (", ".join(map(str, [grouped_samp.loc["SE8", "germline"]])))
+            print(biosamp_SE8_germ)
+            bed_id=int(bed_id)
             command_bs_launch = (
                 f'bs launch application -n "DRAGEN Enrichment" --app-version 3.9.5 '
                 f'-o project-id:{proj_id} -o app-session-name:{appsession_name} -l {appsession_name} '
@@ -30,6 +32,7 @@ for test_name, capr_kit, proj_id, appsession_name, bed_id, liq_tm, vc_af_call, v
                 f'-o commandline-disclaimer:true -o arbitrary:"--read-trimmers:adapter --trim-adapter-read1" '
                 f'-o additional-file:25600057590 -o automation-sex:unknown'
             )
+            print(command_bs_launch)
             bs_launch_run = subprocess.run(command_bs_launch, shell=True, capture_output=True, text=True)
             print("STDOUT:", bs_launch_run.stdout)
             print("STDERR:", bs_launch_run.stderr)
