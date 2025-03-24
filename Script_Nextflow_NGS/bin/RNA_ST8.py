@@ -32,7 +32,7 @@ for test_name, capr_kit, proj_id, appsession_name, bed_id, liq_tm, vc_af_call, v
             f'bs launch application -n "DRAGEN RNA Pipeline" '
             f"--app-version 3.6.3 -o project-id:{proj_id} "
             f"-o app-session-name:{appsession_name} -l {appsession_name} "
-            f"-o output_format:BAM -o coverage_list.coverage_bed_id:23683257154"
+            f"-o output_format:BAM -o coverage_list.coverage_bed_id:23683257154 "
             f"-o sample-id:biosamples/{biosamp_ST8_germ} "
             f"-o ht-ref:hg19-altaware-cnv-anchor.v8 -o gene_fusion:1 "
             f"-o quantification_checkbox:1 -o commandline-disclaimer:true"
