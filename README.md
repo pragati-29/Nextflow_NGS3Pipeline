@@ -40,6 +40,7 @@ This script defines a Nextflow pipeline used for processing, uploading and analy
     params.input_dir 
     params.sample_file 
     params.output_dir 
+    params.project
 ####  Process
      Renaming 
         Input: "${params.input_dir}" "${params.sample_file}" "output.csv" 
