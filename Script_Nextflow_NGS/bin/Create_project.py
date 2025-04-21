@@ -64,3 +64,4 @@ if created_projects:
     print(f"Successfully created projects: {', '.join(created_projects)}")
 else:
     print("No new projects were created.")
+

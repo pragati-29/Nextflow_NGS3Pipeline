@@ -2,8 +2,8 @@
 import pandas as pd
 import subprocess
 import argparse
-import time
 import os
+import time
 
 parser = argparse.ArgumentParser(description="Extract project and biosample IDs, upload datasets, and generate a CSV output.")
 parser.add_argument("sample_file", help="Path to the input sample CSV file")
