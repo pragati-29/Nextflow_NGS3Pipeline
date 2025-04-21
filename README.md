@@ -64,16 +64,15 @@ This script defines a Nextflow pipeline used for processing, uploading and analy
                2. XAVAB_B1B2_D_L2_SE8_Nextflow_Test_R1.fastq.gz (Not Renamed)
                   Sample Name will be : XAVAB_B1B2_D_L2_SE8_Nextflow_Test
     - Test_Name,Sample_Type,Capturing_Kit column values are casesensitive
-      1. Test_Name:- INDIEGENE, TARGET_FIRST, ABSOLUTE (capital letter)
+      1. Test_Name:- INDIEGENE, TARGET_FIRST, ABSOLUTE, SE8, ST8, CT (capital letter)
       2. Sample_Type:- DNA
       3. Capturing_Kit:- GE,CE,SE8,FEV2F2both
       Note- Use test_file_for_nextflow.py file to create csv file if you do not want to create manually. Provide Project name and recheck sample name.
   #### Run script from terminal
-     Give permission to python files of bin folder: chmod 777 path/Nextflow_NGS3Pipeline/Script_Nextflow_NGS/bin/*.py
      Run the script: nextflow run Path/project_names_using_csv_file_ngs3_nextflow.nf --input_dir path/input_folder --sample_file path/test_ngs3_nextflow_Copy.csv --output_dir path/output_folder
    
   #### Steps for running nextflow script: https://docs.google.com/document/d/18IB0OyzrwdjB-TRqhlxHC4fQSoJ3cr750b5wpTMfFBs/edit?tab=t.0
-  ### Note: RNA (CT and ST8) CDS and Fe are not included yet. Please provide full path of inputs to run the script
+  
 
 
 
