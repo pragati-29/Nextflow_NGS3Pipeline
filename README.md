@@ -44,15 +44,63 @@ This script defines a Nextflow pipeline used for processing, uploading and analy
      Renaming 
         Input: "${params.input_dir}" "${params.sample_file}" "output.csv" 
         Output: "output.csv" 
+     create_project
+         Input: "output.csv"
+         output: "created_proj.csv"
      extract_and_upload_samples 
-        Input: "output.csv" 
+        Input: "created_proj.csv" 
         Output: "new_file_test.csv" 
      preprocessing_for_launch  
         Input: "new_file_test.csv" 
         Output: "test_file.csv" 
-     bs_launch   
+     Target_first   
         Input: "test_file.csv" 
         Output: stdout 
+     Indiegene_GE_Som
+        Input: "test_file.csv"
+        Output: stdout
+     Indiegene_GE_germ
+        Input: "test_file.csv"
+        Output: stdout
+     Indiegene_CE_som
+        Input: "test_file.csv"
+        Output: stdout
+     Indiegene_CE_germ
+        Input: "test_file.csv"
+        Output: stdout
+     SE8_som
+        Input: "test_file.csv"
+        Output: stdout
+     SE8_germ
+        Input: "test_file.csv"
+        Output: stdout
+     CDS
+        Input: "test_file.csv"
+        Output: stdout
+     RNA_CT
+        Input: "test_file.csv"
+        Output: stdout
+     RNA_SE8
+        Input: "test_file.csv"
+        Output: stdout
+     Indiegene_CEFu
+        Input: "test_file.csv"
+        Output: stdout
+     QC
+        Input: Output directory, "test_file.csv"
+        Output: stdout
+     CNV
+        Input: Output directory, "test_file.csv"
+        oytput: "*"
+     DNA_fusion
+        Input:Output directory, "test_file.csv"
+        Output: "*_fusions", "*intersected.bam", "*intersected.bam.bai"
+     Hotspot
+        Input:Output directory, "test_file.csv"
+        Output: "*_alt_pipeline.vcf", "*_Hotspot_V2.xlsx"
+     Gene_Coverage
+        Input: Output directory, "test_file.csv"
+        Output: "*"
 ## Process to run Nextflow NGSpipline
  #### Create CSV file
     test_ngs3_nextflow_Copy.csv 
@@ -64,10 +112,10 @@ This script defines a Nextflow pipeline used for processing, uploading and analy
                2. XAVAB_B1B2_D_L2_SE8_Nextflow_Test_R1.fastq.gz (Not Renamed)
                   Sample Name will be : XAVAB_B1B2_D_L2_SE8_Nextflow_Test
     - Test_Name,Sample_Type,Capturing_Kit column values are casesensitive
-      1. Test_Name:- INDIEGENE, TARGET_FIRST, ABSOLUTE, SE8, ST8, CT (capital letter)
+      1. Test_Name:- INDIEGENE, TARGET_FIRST, ABSOLUTE, SE8, ST8, CT (capital letter) etc
       2. Sample_Type:- DNA
       3. Capturing_Kit:- GE,CE,SE8,FEV2F2both
-      Note- Use test_file_for_nextflow.py file to create csv file if you do not want to create manually. Provide Project name and recheck sample name.
+      Note- Use test_file_for_nextflow.py file to create csv file if you do not want to create manually then Provide Project name and recheck sample name.
   #### Run script from terminal
      Run the script: nextflow run Path/project_names_using_csv_file_ngs3_nextflow.nf --input_dir path/input_folder --sample_file path/test_ngs3_nextflow_Copy.csv --output_dir path/output_folder
    
