@@ -1,7 +1,7 @@
 # Nextflow_NGS3Pipeline 
 ## Aim:- Implementation of NGS3Pipeline in Nextflow 
 ## Overview 
-This script defines a Nextflow pipeline used for processing, uploading and analysis of sequencing data. It handles renaming files and uploading datasets to BaseSpace projects based on specific sample naming conventions and their analysis. The workflow is structured around parameter definitions, individual processes, and a workflow definition. 
+The Nextflow NGS3Pipeline automates renaming, uploading, and analysis of NGS data using Nextflow. It takes FASTQ files and a sample CSV as input and processes them through multiple steps like renaming, project creation, basespace upload, basespace analysis and downstream analyses (e.g., CNV, QC, fusion, gene coverage). The workflow is structured around parameter definitions, individual processes, and a workflow definition.
 ## Requirements: 
   * Nextflow
   * Python3
@@ -52,7 +52,7 @@ This script defines a Nextflow pipeline used for processing, uploading and analy
     params.project (Use this parameter only when you want to create a new project, it can create multiple projects just you need to provide project names in csv file)
 ####  Process
      - Every process has its separate script in the bin folder.
-     - For downstream processes, the scripts are the same as the previous ones, but you need to change the path in each script of the downstream.
+     - For downstream processes, the scripts are the same as the previous ones, but you need to change the path in each script of the downstream for now but I will resolve this ASAP.
      Renaming 
         Input: "${params.input_dir}" "${params.sample_file}" "output.csv" 
         Output: "output.csv" 
@@ -131,9 +131,11 @@ This script defines a Nextflow pipeline used for processing, uploading and analy
   #### Run script from terminal
      Run the script: nextflow run Path/project_names_using_csv_file_ngs3_nextflow.nf --input_dir path/input_folder --sample_file path/test_ngs3_nextflow_Copy.csv --output_dir path/output_folder 
                        or
-      When you have new project names in csv file: nextflow run Path/project_names_using_csv_file_ngs3_nextflow.nf --input_dir path/input_folder --sample_file path/test_ngs3_nextflow_Copy.csv --output_dir path/output_folder --project new 
+     When you have new project names in csv file: nextflow run Path/project_names_using_csv_file_ngs3_nextflow.nf --input_dir path/input_folder --sample_file path/test_ngs3_nextflow_Copy.csv --output_dir path/output_folder --project new 
    
   #### Steps for running nextflow script: https://docs.google.com/document/d/18IB0OyzrwdjB-TRqhlxHC4fQSoJ3cr750b5wpTMfFBs/edit?tab=t.0
+
+  **Note: Annotation and CGI are not included in this process**
   
 
 
