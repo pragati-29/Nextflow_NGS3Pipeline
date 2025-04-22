@@ -23,13 +23,13 @@ The Nextflow NGS3Pipeline automates renaming, uploading, and analysis of NGS dat
       chmod +x nextflow
   * sudo mv nextflow /usr/local/bin/
 ## Basespace installation
-  * Install bs
+  * Install bs: 
       wget https://github.com/basespace/basespace-cli/releases/download/v0.9.93/bs-linux
-  * Make it executable
+  * Make it executable: 
       chmod +x bs-linux
-  * Move
+  * Move: 
       sudo mv bs-linux /usr/local/bin/bs
-  * login
+  * login: 
       bs auth
 ## Clone GitHub repository
    - Go to Source Control of VS Code
