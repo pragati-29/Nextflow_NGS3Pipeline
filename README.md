@@ -22,6 +22,15 @@ This script defines a Nextflow pipeline used for processing, uploading and analy
   * Make Nextflow executable:
       chmod +x nextflow
   * sudo mv nextflow /usr/local/bin/
+## Basespace installation
+  * Install bs
+      wget https://github.com/basespace/basespace-cli/releases/download/v0.9.93/bs-linux
+  * Make it executable
+      chmod +x bs-linux
+  * Move
+      sudo mv bs-linux /usr/local/bin/bs
+  * login
+      bs auth
 ## Clone GitHub repository
    - Go to Source Control of VS Code
    - Click on clone
@@ -40,8 +49,10 @@ This script defines a Nextflow pipeline used for processing, uploading and analy
     params.input_dir 
     params.sample_file 
     params.output_dir 
-    params.project
+    params.project (Use this parameter only when you want to create a new project, it can create multiple projects just you need to provide project names in csv file)
 ####  Process
+     - Every process has its separate script in the bin folder.
+     - For downstream processes, the scripts are the same as the previous ones, but you need to change the path in each script of the downstream.
      Renaming 
         Input: "${params.input_dir}" "${params.sample_file}" "output.csv" 
         Output: "output.csv" 
@@ -118,7 +129,9 @@ This script defines a Nextflow pipeline used for processing, uploading and analy
       3. Capturing_Kit:- GE,CE,SE8,FEV2F2both
       Note- Use test_file_for_nextflow.py file to create csv file if you do not want to create manually then Provide Project name and recheck sample name.
   #### Run script from terminal
-     Run the script: nextflow run Path/project_names_using_csv_file_ngs3_nextflow.nf --input_dir path/input_folder --sample_file path/test_ngs3_nextflow_Copy.csv --output_dir path/output_folder
+     Run the script: nextflow run Path/project_names_using_csv_file_ngs3_nextflow.nf --input_dir path/input_folder --sample_file path/test_ngs3_nextflow_Copy.csv --output_dir path/output_folder 
+                       or
+      When you have new project names in csv file: nextflow run Path/project_names_using_csv_file_ngs3_nextflow.nf --input_dir path/input_folder --sample_file path/test_ngs3_nextflow_Copy.csv --output_dir path/output_folder --project new 
    
   #### Steps for running nextflow script: https://docs.google.com/document/d/18IB0OyzrwdjB-TRqhlxHC4fQSoJ3cr750b5wpTMfFBs/edit?tab=t.0
   
