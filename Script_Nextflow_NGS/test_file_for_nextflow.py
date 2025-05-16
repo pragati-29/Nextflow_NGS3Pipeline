@@ -21,7 +21,7 @@ df.loc[df["file_name"].str.contains(r"(?i)([_-]|^)CE([_-]|$)", na=False), "Captu
 df.loc[~df["file_name"].str.contains(r"(?i)[_-]CT[_-]|[_-]ST8[_-]", na=False), "Sample_Type"] = "DNA"
 
 # Fill Test_Name
-df.loc[df["Capturing_Kit"] == "GE", "Test_Name"] = "INDIEGENE"
+df.loc[df["Capturing_Kit"] == "GE", "Test_Name"] = "163panel"
 df.loc[df["Capturing_Kit"] == "FEV2F2both", "Test_Name"] = "TARGET_FIRST"
 df.loc[df["Capturing_Kit"].isin(["CE"]), "Test_Name"] = "INDIEGENE"
 df.loc[df["Capturing_Kit"].isin(["SE8"]), "Test_Name"] = "ABSOLUTE"
