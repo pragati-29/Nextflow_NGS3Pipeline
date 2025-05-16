@@ -159,72 +159,6 @@ process Indiegene_CEFu{
     """
 }
 
-process QC{
-    input:
-        path output_loc
-        path sample_file
-    output:
-        stdout
-    script:
-    """
-    VCF_download_QC_extract.py "${output_loc}" "${sample_file}"
-    """
-}
-
-process CNV{
-    publishDir params.output_dir, mode:'copy'
-    input:
-        path output_loc
-        path sample_file
-    output:
-        path "*", optional: true
-    script:
-    """
-    bash ${projectDir}/bin/CNV.sh "${params.output_dir}" "${sample_file}"
-    """
-}
-
-process DNA_fusion{
-    publishDir "${params.output_dir}/Fusion", mode:'copy'
-    input:
-        path output_dir
-        path sample_file
-    output:
-        path "*_fusions", optional: true
-        path "*intersected.bam", optional: true
-        path "*intersected.bam.bai", optional: true
-    script:
-    """
-    awk -F',' 'BEGIN {OFS=","} {if (NR>1) print \$(NF-2)}' "${sample_file}" > ${projectDir}/bin/FuSeq_WES_v1.0.0/list_test.txt
-    bash ${projectDir}/bin/FuSeq_WES_v1.0.0/FuSeq_BAM_FUS_auto.sh "${params.output_dir}" "${sample_file}"
-    """       
-}
-process Hotspot{
-    publishDir "${params.output_dir}/Hotspot", mode:'copy'
-    input:
-        path output_dir
-        path sample_file
-    output:
-        path "*_alt_pipeline.vcf", optional: true
-        path "*_Hotspot_V2.xlsx", optional: true
-    script:
-        """
-        Alternate_VariantCaller_to_Hotspot_V2_09_Apr_24.py "." "${sample_file}"
-        """
-}
-
-process Gene_Coverage {
-    publishDir "${params.output_dir}/GeneCoverage", mode:'copy'
-    input:
-        path input_dir
-        path sample_file
-    output:
-        path "*"
-    script:
-    """
-    Gene_Coverage_via_Mosdepth_V2.py "${sample_file}" Test.xlsx
-    """
-}
 
 workflow{
     //Renaming()
@@ -246,9 +180,4 @@ workflow{
     //RNA_CT(preprocessing_for_launch.out)
     //RNA_SE8(preprocessing_for_launch.out)
     //Indiegene_CEFu(preprocessing_for_launch.out)
-    //QC(params.output_dir,params.sample_file)
-    //CNV(params.output_dir,params.sample_file)
-    //DNA_fusion(params.output_dir,params.sample_file)
-    //Hotspot(params.output_dir,params.sample_file)
-    Gene_Coverage(params.output_dir,params.sample_file)
 }
