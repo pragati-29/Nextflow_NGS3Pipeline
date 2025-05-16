@@ -30,7 +30,7 @@ for test_name, capr_kit, proj_id, appsession_name, bed_id, liq_tm, vc_af_call, v
     file1["vc_type"],
     file1["Sample_Type"]
 ):
-    if "germline" in germ_som and "INDIEGENE" in test_name and "GE" in capr_kit and "DNA" in sample_type:
+    if "germline" in germ_som and "163panel" in test_name and "GE" in capr_kit and "DNA" in sample_type:
         biosamp_GE_germ = ", ".join(map(str, [grouped_samp.loc["GE", "germline"]]))
         bed_id = int(bed_id)
         command_bs_launch = (
