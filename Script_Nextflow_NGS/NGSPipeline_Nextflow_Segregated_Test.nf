@@ -161,23 +161,23 @@ process Indiegene_CEFu{
 
 
 workflow{
-    //Renaming()
-    //if (params.project == "new") {
-    //   project_output = create_project(Renaming.out, params.project_name)
-    //} else {
-      //  project_output = Renaming.out
-    //}
-    //extract_and_upload_samples(project_output)
-    //preprocessing_for_launch(extract_and_upload_samples.out)
-    //Target_first(preprocessing_for_launch.out)
-    //Indiegene_GE_Som(preprocessing_for_launch.out)
-    //Indiegene_GE_germ(preprocessing_for_launch.out)
-    //Indiegene_CE_som(preprocessing_for_launch.out)
-    //Indiegene_CE_germ(preprocessing_for_launch.out)
-    //SE8_som(preprocessing_for_launch.out)
-    //SE8_germ(preprocessing_for_launch.out)
-    //CDS(preprocessing_for_launch.out)
-    //RNA_CT(preprocessing_for_launch.out)
-    //RNA_SE8(preprocessing_for_launch.out)
-    //Indiegene_CEFu(preprocessing_for_launch.out)
+    Renaming()
+    if (params.project == "new") {
+       project_output = create_project(Renaming.out, params.project_name)
+    } else {
+        project_output = Renaming.out
+    }
+    extract_and_upload_samples(project_output)
+    preprocessing_for_launch(extract_and_upload_samples.out)
+    Target_first(preprocessing_for_launch.out)
+    Indiegene_GE_Som(preprocessing_for_launch.out)
+    Indiegene_GE_germ(preprocessing_for_launch.out)
+    Indiegene_CE_som(preprocessing_for_launch.out)
+    Indiegene_CE_germ(preprocessing_for_launch.out)
+    SE8_som(preprocessing_for_launch.out)
+    SE8_germ(preprocessing_for_launch.out)
+    CDS(preprocessing_for_launch.out)
+    RNA_CT(preprocessing_for_launch.out)
+    RNA_SE8(preprocessing_for_launch.out)
+    Indiegene_CEFu(preprocessing_for_launch.out)
 }
