@@ -137,6 +137,7 @@ The Nextflow NGS3Pipeline automates renaming, uploading, and analysis of NGS dat
 
   **Notes:** 
   1.Annotation and CGI are not included in this process. 
+  
   2.Run Upstream and Downstream separately.
   
   
