@@ -176,7 +176,6 @@ process CNV_FeV2{
     input:
         path output_loc
         path sample_file
-        path QC_val
     output:
         path "*", optional: true
     script:
@@ -190,7 +189,6 @@ process CNV_Indiegene{
     input:
         path output_loc
         path sample_file
-        path QC_val
     output:
         path "*", optional: true
     script:    
