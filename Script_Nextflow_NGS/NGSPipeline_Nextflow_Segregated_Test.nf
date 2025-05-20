@@ -244,8 +244,8 @@ process Gene_Coverage {
 
 workflow{
     QC(params.output_dir,params.sample_file)
-    CNV_FeV2(params.output_dir,params.sample_file,validated_qc)
-    CNV_Indiegene(params.output_dir,params.sample_file,validated_qc)
+    CNV_FeV2(params.output_dir,params.sample_file)
+    CNV_Indiegene(params.output_dir,params.sample_file)
     DNA_fusion(params.output_dir,params.sample_file)
     //Hotspot(params.output_dir,params.sample_file)
     //Gene_Coverage(params.output_dir,params.sample_file)
