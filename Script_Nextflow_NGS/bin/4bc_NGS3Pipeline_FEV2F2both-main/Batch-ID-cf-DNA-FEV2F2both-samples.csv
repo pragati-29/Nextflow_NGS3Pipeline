@@ -1,0 +1,6 @@
+Sample_ID_Main,Patient_Name,Test_Name,Sample_Type,Capturing_Kit,Project_name,Project_ID,bed_num_ID,Raw_Name_R1_FastQ,Raw_Name_R2_FastQ,Sample_ID
+XHVAA-B-cf_D_FEV2F2both,Hasan,TARGT_Lung_Liquid__Advanced_,cf-DNA,FEV2F2both,Somatic_Patient_Samples_September_24,430210786,34857530934,XHVAA_B_cf_D_FEV2F2both_R1.fastq.gz,XHVAA_B_cf_D_FEV2F2both_R2.fastq.gz,XHVAA-B-cf-D-FEV2F2both
+XHZAE-B1B2-cf_D_FEV2F2both,Sandhyarani Devi Thokchom,TARGT_First_Liquid,cf-DNA,FEV2F2both,Somatic_Patient_Samples_September_24,430210786,34857530934,XHZAE_B1B2_cf_D_FEV2F2both_R1.fastq.gz,XHZAE_B1B2_cf_D_FEV2F2both_R2.fastq.gz,XHZAE-B1B2-cf-D-FEV2F2both
+XHZA6-B1B2-cf_D_FEV2F2both,Shwetima,TARGT_First_Liquid,cf-DNA,FEV2F2both,Somatic_Patient_Samples_September_24,430210786,34857530934,XHZA6_B1B2_cf_D_FEV2F2both_R1.fastq.gz,XHZA6_B1B2_cf_D_FEV2F2both_R2.fastq.gz,XHZA6-B1B2-cf-D-FEV2F2both
+XEND2-B1B2-cf_D_FEV2F2both,Moti Chand Ram,TARGT_First_Liquid,cf-DNA,FEV2F2both,Somatic_Patient_Samples_September_24,430210786,34857530934,XEND2_B1B2_cf_D_FEV2F2both_R1.fastq.gz,XEND2_B1B2_cf_D_FEV2F2both_R2.fastq.gz,XEND2-B1B2-cf-D-FEV2F2both
+XGAAY-B1B2-cf_D_FEV2F2both,Rahul N,TARGT_First_Liquid,cf-DNA,FEV2F2both,Somatic_Patient_Samples_September_24,430210786,34857530934,XGAAY_B1B2_cf_D_FEV2F2both_R1.fastq.gz,XGAAY_B1B2_cf_D_FEV2F2both_R2.fastq.gz,XGAAY-B1B2-cf-D-FEV2F2both
