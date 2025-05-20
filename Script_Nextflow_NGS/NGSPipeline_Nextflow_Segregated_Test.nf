@@ -171,16 +171,32 @@ process QC{
     """
 }
 
-process CNV{
+process CNV_FeV2{
     publishDir params.output_dir, mode:'copy'
     input:
         path output_loc
         path sample_file
+        path QC_val
     output:
         path "*", optional: true
     script:
     """
-    bash ${projectDir}/bin/CNV.sh "${params.output_dir}" "${sample_file}"
+    bash ${projectDir}/bin/CNV_New.sh "${params.output_dir}" "${params.sample_file}"
+    
+    """
+}
+process CNV_Indiegene{
+    publishDir "${params.output_dir}/CNV/Indiegene", mode:'copy'
+    input:
+        path output_loc
+        path sample_file
+        path QC_val
+    output:
+        path "*", optional: true
+    script:    
+    """
+    bash ${projectDir}/bin/cnv_annotation_somatic_CE.sh "${params.output_dir}" "${params.sample_file}"
+    
     """
 }
 
@@ -228,7 +244,8 @@ process Gene_Coverage {
 
 workflow{
     QC(params.output_dir,params.sample_file)
-    CNV(params.output_dir,params.sample_file)
+    CNV_FeV2(params.output_dir,params.sample_file,validated_qc)
+    CNV_Indiegene(params.output_dir,params.sample_file,validated_qc)
     DNA_fusion(params.output_dir,params.sample_file)
     //Hotspot(params.output_dir,params.sample_file)
     //Gene_Coverage(params.output_dir,params.sample_file)
