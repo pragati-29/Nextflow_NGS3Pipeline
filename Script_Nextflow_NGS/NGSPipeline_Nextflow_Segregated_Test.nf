@@ -227,28 +227,9 @@ process Gene_Coverage {
 }
 
 workflow{
-    //Renaming()
-    //if (params.project == "new") {
-    //   project_output = create_project(Renaming.out, params.project_name)
-    //} else {
-      //  project_output = Renaming.out
-    //}
-    //extract_and_upload_samples(project_output)
-    //preprocessing_for_launch(extract_and_upload_samples.out)
-    //Target_first(preprocessing_for_launch.out)
-    //Indiegene_GE_Som(preprocessing_for_launch.out)
-    //Indiegene_GE_germ(preprocessing_for_launch.out)
-    //Indiegene_CE_som(preprocessing_for_launch.out)
-    //Indiegene_CE_germ(preprocessing_for_launch.out)
-    //SE8_som(preprocessing_for_launch.out)
-    //SE8_germ(preprocessing_for_launch.out)
-    //CDS(preprocessing_for_launch.out)
-    //RNA_CT(preprocessing_for_launch.out)
-    //RNA_SE8(preprocessing_for_launch.out)
-    //Indiegene_CEFu(preprocessing_for_launch.out)
-    //QC(params.output_dir,params.sample_file)
-    //CNV(params.output_dir,params.sample_file)
-    //DNA_fusion(params.output_dir,params.sample_file)
+    QC(params.output_dir,params.sample_file)
+    CNV(params.output_dir,params.sample_file)
+    DNA_fusion(params.output_dir,params.sample_file)
     //Hotspot(params.output_dir,params.sample_file)
-    Gene_Coverage(params.output_dir,params.sample_file)
+    //Gene_Coverage(params.output_dir,params.sample_file)
 }
