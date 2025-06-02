@@ -37,16 +37,16 @@ library(GenomicFeatures)
 # Load sources
 ###############################
 
-source("/home/bioinfoa/Pragati/FuSeq_WES_v1.0.0/R/FuSeq_functions.R")
-source("/home/bioinfoa/Pragati/FuSeq_WES_v1.0.0/R/detectJunctionBreaks.R")
-source("/home/bioinfoa/Pragati/FuSeq_WES_v1.0.0/R/doBiologicalFilter.R")
-source("/home/bioinfoa/Pragati/FuSeq_WES_v1.0.0/R/integrateFusion.R")
+source("//home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/R/FuSeq_functions.R")
+source("//home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/R/detectJunctionBreaks.R")
+source("//home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/R/doBiologicalFilter.R")
+source("//home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/R/integrateFusion.R")
 #### scripts for WES
-source("/home/bioinfoa/Pragati/FuSeq_WES_v1.0.0/R/processSplitRead_WES.R") #split read processing designed for WES
-source("/home/bioinfoa/Pragati/FuSeq_WES_v1.0.0/R/postProcessSplitRead_WES.R") #split read post-processing designed for WES
-source("/home/bioinfoa/Pragati/FuSeq_WES_v1.0.0/R/processFEQ_WES.R") # designed for WES
-source("/home/bioinfoa/Pragati/FuSeq_WES_v1.0.0/R/processMappedRead_WES.R") # designed for WES
-source("/home/bioinfoa/Pragati/FuSeq_WES_v1.0.0/R/getSeqLenInfo.R") # designed for WES
+source("//home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/R/processSplitRead_WES.R") #split read processing designed for WES
+source("//home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/R/postProcessSplitRead_WES.R") #split read post-processing designed for WES
+source("//home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/R/processFEQ_WES.R") # designed for WES
+source("//home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/R/processMappedRead_WES.R") # designed for WES
+source("//home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/R/getSeqLenInfo.R") # designed for WES
 
 ##############################
 # Prepare params

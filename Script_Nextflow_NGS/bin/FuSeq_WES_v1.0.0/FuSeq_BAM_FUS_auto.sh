@@ -28,7 +28,7 @@ while IFS= read -r line; do
 
     # Intersect BAM with known fusions
     intersectBed -abam "$bam_path" \
-        -b "/home/bioinfoa/Pragati/FuSeq_WES_v1.0.0/knowngeneFusions.bed" -f 1 > "$intersected_bam"
+        -b "/home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/knowngeneFusions.bed" -f 1 > "$intersected_bam"
 
     samtools index "$intersected_bam"
     echo ">-----${intersected_bam} CREATED------<"
@@ -36,24 +36,22 @@ while IFS= read -r line; do
     echo "Starting ${line}"
 
     bamfile="$fusion_dir/${intersected_bam}"
-    ref_json="/home/bioinfoa/Pragati/FuSeq_WES_v1.0.0/UCSC_hg19_wes_contigSize3000_bigLen130000_r100/UCSC_hg19_wes_contigSize3000_bigLen130000_r100.json"
-    gtfSqlite="/home/bioinfoa/Pragati/FuSeq_WES_v1.0.0/UCSC_hg19_wes_contigSize3000_bigLen130000_r100/UCSC_hg19_wes_contigSize3000_bigLen130000_r100.sqlite"
+    ref_json="/home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/UCSC_hg19_wes_contigSize3000_bigLen130000_r100/UCSC_hg19_wes_contigSize3000_bigLen130000_r100.json"
+    gtfSqlite="/home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/UCSC_hg19_wes_contigSize3000_bigLen130000_r100/UCSC_hg19_wes_contigSize3000_bigLen130000_r100.sqlite"
 
     output_dir="${line}_fusions"
     mkdir "$output_dir"
 
     # Step 1: Extract mapped and split reads
-    python3 "/home/bioinfoa/Pragati/FuSeq_WES_v1.0.0/fuseq_wes.py" \
-        --bam "$bamfile" --gtf "$ref_json" --mapq-filter --outdir "$output_dir"
+    python3 "/home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/fuseq_wes.py" --bam "$bamfile" --gtf "$ref_json" --mapq-filter --outdir "$output_dir"
 
     # Step 2: Process reads with R
-    fusiondbFn="/home/bioinfoa/Pragati/FuSeq_WES_v1.0.0/Data/Mitelman_fusiondb.RData"
-    paralogdbFn="/home/bioinfoa/Pragati/FuSeq_WES_v1.0.0/Data/ensmbl_paralogs_grch37.RData"
+    fusiondbFn="/home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/Data/Mitelman_fusiondb.RData"
+    paralogdbFn="/home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/Data/ensmbl_paralogs_grch37.RData"
 
-    Rscript "/home/bioinfoa/Pragati/FuSeq_WES_v1.0.0/process_fuseq_wes.R" \
-        in="$output_dir" sqlite="$gtfSqlite" fusiondb="$fusiondbFn" paralogdb="$paralogdbFn" out="$output_dir"
+    Rscript "/home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/process_fuseq_wes.R" in="$output_dir" sqlite="$gtfSqlite" fusiondb="$fusiondbFn" paralogdb="$paralogdbFn" out="$output_dir"
 
-    Rscript "/home/bioinfoa/Pragati/FuSeq_WES_v1.0.0/bedpeconvert.R" "$output_dir"
+    Rscript "/home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/bedpeconvert.R" "$output_dir"
 
     # Rename output files
     for f in FuSeq_WES_FusionFinal.txt FuSeq_WES_SR_fge_fdb.txt FuSeq_WES_SR_fge.txt \
@@ -62,7 +60,7 @@ while IFS= read -r line; do
     done
 
     # Step 3: Generate .fus summary
-    Fusion_FUS="/home/bioinfoa/Pragati/FuSeq_WES_v1.0.0/"
+    Fusion_FUS="/home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/"
     Fusion_Folder="$fusion_dir/$output_dir"
 
     cp "$Fusion_FUS/fusion_summary.py" "$Fusion_Folder"
@@ -77,4 +75,3 @@ while IFS= read -r line; do
 done < "$input"
 
 echo "########## ALL FILES DONE ############"
-
