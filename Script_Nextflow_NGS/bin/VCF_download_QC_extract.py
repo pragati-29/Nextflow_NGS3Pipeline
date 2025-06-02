@@ -45,8 +45,8 @@ def main():
                 os.system(f"chmod 777 {bs_file_path}")
                 os.chdir(location)
                 
-                p = subprocess.Popen(['bash', bs_file_path], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-                output, error = p.communicate(input='yes\n')
+                #p = subprocess.Popen(['bash', bs_file_path], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+                #output, error = p.communicate(input='yes\n')
                 os.chdir(annotation_dir)
                 
                 def download_vcf(app_session_id):
