@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# coding: utf-8
+
 """
 Created on Wed Jun  7 23:23:37 2023
 
@@ -9,6 +12,7 @@ import pandas as pd
 import glob
 import os
 import sys
+import subprocess
 
 # Read the list.txt file into a DataFrame
 #input_csv = sys.argv[1]
@@ -16,9 +20,14 @@ import sys
 #path = os.getcwd()
 path_1 = sys.argv[1]
 file1 = sys.argv[2]
+location = sys.argv[3]
+#os.system(f"basemount-cmd refresh {location}/basespace")
 
 list_df = pd.read_csv(path_1) #list can be substituted by file generated via sample_ID.py
 print ("Print Dataframe:",list_df)
+#taking environment variable mosdepth
+mosdepth_path = os.environ.get("mosdepth")
+print("mosdepth_path: ", mosdepth_path)
 # Create a dictionary to map project names to sample IDs and test names
 #Approach One
 #Open the command.sh file in write mode
@@ -26,11 +35,15 @@ with open("command.sh", "w") as file:
     # Iterate over each sample
     for sample, project_name in zip(list_df['Sample_ID'],list_df['Project_name']):
         # Get the corresponding project name and test name for the current sample
-        bed_file_path = f"/home/bioinfoa/Pragati/basespace/Projects/{project_name}/AppResults/{sample}/Files/TarGT_First_v2_CDS_and_FEV2F2_GRCh37_30_Mar_23.bed"
+        shell_cmd = f"""ls {location}/basespace/Projects/{project_name}/AppResults/{sample}/Files/*.bed | awk -F/ '!($NF ~ /{sample}/) {{ print $0 }}'"""
+        result =  subprocess.run(shell_cmd, shell=True, capture_output=True, text=True)
+        bed_file_path = result.stdout.strip()
+        print(result)
+        print(shell_cmd)
         print (bed_file_path)
         #bed_file_path =f"/home/bioinfo4home/bioinfo4/ubuntu/Projects/{project_name}/AppResults/{sample}*/Files/TarGT_First_v2_CDS_and_FEV2F2_GRCh37_30_Mar_23.bed"
         # Create the command with the updated project name and test name
-        command = f"/home/bioinfoa/Programs/mosdepth --by {bed_file_path} --thresholds 1,10,20,50,100 {sample} /home/bioinfoa/Pragati/basespace/Projects/{project_name}/AppResults/{sample}/Files/{sample}.bam"
+        command = f"{mosdepth_path} --by {bed_file_path} --thresholds 1,10,20,50,100 {sample} {location}/basespace/Projects/{project_name}/AppResults/{sample}/Files/{sample}.bam"
         
         # Write the command to the command.sh file
         print(f"Printing command in sh file for sample {sample}:") 

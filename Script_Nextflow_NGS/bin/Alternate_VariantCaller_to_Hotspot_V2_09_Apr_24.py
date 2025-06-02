@@ -15,13 +15,17 @@ from datetime import datetime
 import re
 
 #set the path for taking in common files
-common_file_dir="/home/bioinfoa/Programs/Freebayes_Test_Runs/Common_files/"
+#common_file_dir="/home/bioinfoa/Programs/Freebayes_Test_Runs/Common_files/"
+
+common_file_dir = os.environ.get("COMMON_FILE_DIR")
+freebayes_path = os.environ.get("FREEBAYES_PATH")
 print(common_file_dir)
 
 print("\n VCF Calling by Alternative Method and Hotspot for SomaticDNA or cf-DNA \n")
 path_1 = sys.argv[1]
 file1 = sys.argv[2]
 
+#os.system(f"basemount-cmd refresh {path_1}/basespace")
 input_filename = pd.read_csv(file1) #list can be substituted by file generated via sample_ID.py
 print ("Print Dataframe:",input_filename)
 path_2 = os.path.dirname(path_1.rstrip('/'))
@@ -35,45 +39,45 @@ output_filename = "TFirst" #input_filename.split('_')[0]
 for sample, Capturing_Kit,project_name in zip(input_filename['Sample_ID'], input_filename['Capturing_Kit'],input_filename['Project_name']): 
     #path_to_bam = "/home/bioinfoa/Programs/basespace/Projects/"+project_name+"/AppResults/"+sample+"-S1/Files/"+sample+"-S1.bam"
     #path_to_bam =f"/home/bioinfoa/Programs/basespace/Projects/{project_name}/AppResults/{sample}*/Files/{sample}*.bam"
-    path_to_bam = f"/home/bioinfoa/Pragati/basespace/Projects/{project_name}/AppResults/{sample}/Files/{sample}.bam"
+    path_to_bam = f"{path_1}/basespace/Projects/{project_name}/AppResults/{sample}/Files/{sample}.bam"
     #path_to_bam = "/home/bioinfoa/Programs/basespace/Projects/project_name/AppResults/{sample}*/Files/{sample}*.bam"
     if Capturing_Kit=="FEV2F2both" or Capturing_Kit=="CDS" or Capturing_Kit=="GE":
             if "-cf" in sample:
-                comd_1="/usr/bin/freebayes -f "+common_file_dir+"hg19.fasta -F 0.008 -t "+common_file_dir+"all_hotspot_variant_gs.bed "+path_to_bam+" > " + path_1 + "/"+sample+"_alt_pipeline.vcf"
+                comd_1=f"{freebayes_path} -f "+common_file_dir+"hg19.fasta -F 0.008 -t "+common_file_dir+"all_hotspot_variant_gs.bed "+path_to_bam+" > " + path_1 + "/"+sample+"_alt_pipeline.vcf"
                 sample_type="cfDNA"
                 print(comd_1)
                 os.system(comd_1)
             elif "-F" in sample  or "-B" in sample and "-cf" not in sample:
-                comd_1="/usr/bin/freebayes -f "+common_file_dir+"hg19.fasta -F 0.008 -t "+common_file_dir+"all_hotspot_variant_gs.bed "+path_to_bam+" > " + path_1 + "/"+sample+"_alt_pipeline.vcf" 
+                comd_1=f"{freebayes_path} -f "+common_file_dir+"hg19.fasta -F 0.008 -t "+common_file_dir+"all_hotspot_variant_gs.bed "+path_to_bam+" > " + path_1 + "/"+sample+"_alt_pipeline.vcf" 
                 sample_type="somatic"
                 print(comd_1)
                 os.system(comd_1)
             else:
-                comd_1="/usr/bin/freebayes -f "+common_file_dir+"hg19.fasta -F 0.008 -t "+common_file_dir+"all_hotspot_variant_gs.bed "+path_to_bam+" > " + path_1 + sample + "_alt_pipeline.vcf" 
+                comd_1=f"{freebayes_path} -f "+common_file_dir+"hg19.fasta -F 0.008 -t "+common_file_dir+"all_hotspot_variant_gs.bed "+path_to_bam+" > " + path_1 + sample + "_alt_pipeline.vcf" 
                 sample_type="somatic"
                 print(comd_1)
                 os.system(comd_1)
     elif Capturing_Kit=="CE" or Capturing_Kit=="CEFu":
             if "-cf" in sample:
-                comd_1="/usr/bin/freebayes -f "+common_file_dir+"hg19.fasta -F 0.008 -t "+common_file_dir+"all_hotspot_variant_gs.bed "+path_to_bam+" > " + path_1 + "/"+sample+"_alt_pipeline.vcf"
+                comd_1=f"{freebayes_path} -f "+common_file_dir+"hg19.fasta -F 0.008 -t "+common_file_dir+"all_hotspot_variant_gs.bed "+path_to_bam+" > " + path_1 + "/"+sample+"_alt_pipeline.vcf"
                 print(comd_1)
                 os.system(comd_1)
             elif "-F" in sample or "-B" in sample and "-cf" not in sample:
-                comd_1="/usr/bin/freebayes -f "+common_file_dir+"hg19.fasta -F 0.008 -t "+common_file_dir+"all_hotspot_variant_gs.bed "+path_to_bam+" > " + path_1 + "/"+sample+"_alt_pipeline.vcf"
+                comd_1=f"{freebayes_path} -f "+common_file_dir+"hg19.fasta -F 0.008 -t "+common_file_dir+"all_hotspot_variant_gs.bed "+path_to_bam+" > " + path_1 + "/"+sample+"_alt_pipeline.vcf"
                 print(comd_1)
                 os.system(comd_1)
     elif Capturing_Kit=="SE8":
             if "-cf" in sample:
-                comd_1="/usr/bin/freebayes -f "+common_file_dir+"hg19.fasta -F 0.008 -t "+common_file_dir+"all_hotspot_variant_gs.bed "+path_to_bam+" > " + path_1 + "/"+sample+"_alt_pipeline.vcf"
+                comd_1=f"{freebayes_path} -f "+common_file_dir+"hg19.fasta -F 0.008 -t "+common_file_dir+"all_hotspot_variant_gs.bed "+path_to_bam+" > " + path_1 + "/"+sample+"_alt_pipeline.vcf"
                 print(comd_1)
                 os.system(comd_1)
             elif "-F" in sample or "-B" in sample and "-cf" not in sample:
-                comd_1="/usr/bin/freebayes -f "+common_file_dir+"hg19.fasta -F 0.008 -t "+common_file_dir+"all_hotspot_variant_gs.bed "+path_to_bam+" > " + path_1 + "/"+sample+"_alt_pipeline.vcf"
+                comd_1=f"{freebayes_path} -f "+common_file_dir+"hg19.fasta -F 0.008 -t "+common_file_dir+"all_hotspot_variant_gs.bed "+path_to_bam+" > " + path_1 + "/"+sample+"_alt_pipeline.vcf"
                 print(comd_1)
                 os.system(comd_1)
     else:
         print("Invlid Capturing Kit and Notation For Sample:" + sample )
-        comd_igv_report="create_report " + path_1 + "/"+sample+"_alt_pipeline.vcf --fasta /home/bioinfoa/Programs/Freebayes_Test_Runs/Common_files/hg19.fasta --ideogram /home/bioinfoa/Programs/IGV_Linux_2.9.2_WithJava/IGV_Linux_2.9.2/igv/genomes/cytoBand.txt --flanking 300 --info-columns DP SAF SAR SRR SRF --tracks " + path_1 + "/"+sample+"_alt_pipeline.vcf "+path_to_bam+" /home/bioinfoa/Programs/IGV_Linux_2.9.2_WithJava/IGV_Linux_2.9.2/igv/genomes/ncbiRefGene.txt --output " + path_1 + "/"+sample+"_hotspot.html"
+        comd_igv_report="create_report " + path_1 + "/"+sample+"_alt_pipeline.vcf --fasta " +common_file_dir+"hg19.fasta --ideogram " +IGV+"/genomes/cytoBand.txt --flanking 300 --info-columns DP SAF SAR SRR SRF --tracks " + path_1 + "/"+sample+"_alt_pipeline.vcf "+path_to_bam+" "+IGV+"/genomes/ncbiRefGene.txt --output " + path_1 + "/"+sample+"_hotspot.html"
         print(comd_igv_report)
         os.system(comd_igv_report)
 custom_header = ["#CHROM", "POS", "ID", "REF", "ALT", "QUAL", "FILTER", "INFO", "FORMAT", "Sample_Depth_Info","Sample_ID"]
@@ -202,5 +206,5 @@ df_combined['GENE_NAME'] = df_combined.apply(tag_gene_name, axis=1)
 # Save the cleaned df_combined DataFrame to an Excel file
 # Save the df_combined DataFrame to an Excel file
 #output_excel_file = output_filename+"_Hotspot.xlsx"
-output_excel_file = path_1 + "/"+ output_filename+"_"+sample_type+"_Hotspot_V2.xlsx"
+output_excel_file = path_1 + "/"+ output_filename+"_"+"_Hotspot_V2.xlsx"
 df_combined.to_excel(output_excel_file, index=False)
