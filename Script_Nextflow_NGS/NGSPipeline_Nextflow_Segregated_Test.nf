@@ -234,14 +234,12 @@ process CNV_FeV2 {
     script:
     """
     #bash ${projectDir}/bin/CNV_New.sh "${params.output_dir}" "${params.sample_file}"
-    if grep -q ',TARGET_FIRST,' "${sample_file}"; then
+    if awk -F',' 'NR>1 && \$1 == "TARGET_FIRST"' "${params.sample_file}" | grep -q .; then
         echo "Running CNV_FeV2 because TARGET_FIRST is present"
         bash ${projectDir}/bin/CNV_New.sh "${params.output_dir}" "${params.sample_file}"
     else
-        echo "Skipping CNV_FeV2: TARGET_FIRST not found in Test_Name column"
-        
+        echo "Skipping CNV_FeV2: TARGET_FIRST not found in first column"
     fi
-    
     """
 }
 process CNV_Indiegene {
@@ -257,8 +255,13 @@ process CNV_Indiegene {
 
     script:
     """
-    bash ${projectDir}/bin/cnv_annotation_somatic_CE.sh "${params.output_dir}" "${params.sample_file}"
-    
+    #bash ${projectDir}/bin/cnv_annotation_somatic_CE.sh "${params.output_dir}" "${params.sample_file}"
+    if awk -F',' 'NR>1 && \$1 == "INDIEGENE"' "${params.sample_file}" | grep -q .; then
+        echo "Running CNV_Indiegene because INDIEGENE is present"
+        bash ${projectDir}/bin/cnv_annotation_somatic_CE.sh "${params.output_dir}" "${params.sample_file}"
+    else
+        echo "Skipping CNV_Indiegene: INDIEGENE not found in first column"
+    fi
     """
 }
 
@@ -277,8 +280,8 @@ process DNA_fusion {
 
     script:
     """
-    awk -F',' 'BEGIN {OFS=","} {if (NR>1) print \$(NF-2)}' "${sample_file}" > ${projectDir}/bin/FuSeq_WES_v1.0.0/list_test.txt
-    bash ${projectDir}/bin/FuSeq_WES_v1.0.0/FuSeq_BAM_FUS_auto.sh "${params.output_dir}" "${sample_file}"
+    awk -F',' 'BEGIN {OFS=","} {if (NR>1) print \$(NF-2)}' "${params.sample_file}" > ${projectDir}/bin/FuSeq_WES_v1.0.0/list_test.txt
+    bash ${projectDir}/bin/FuSeq_WES_v1.0.0/FuSeq_BAM_FUS_auto.sh "${params.output_dir}" "${params.sample_file}"
     """
 }
 process Hotspot {
@@ -320,10 +323,10 @@ process Gene_Coverage {
 
 workflow {
     copy_setup=CopySetupScript(params.output_dir)
-    //QC(params.output_dir, params.sample_file,copy_setup)
+    QC(params.output_dir, params.sample_file,copy_setup)
     CNV_FeV2(params.output_dir, params.sample_file,copy_setup)
-    //CNV_Indiegene(params.output_dir, params.sample_file,copy_setup)
+    CNV_Indiegene(params.output_dir, params.sample_file,copy_setup)
     DNA_fusion(params.output_dir, params.sample_file,copy_setup)
-    //Hotspot(params.output_dir, params.sample_file,copy_setup)
-    //Gene_Coverage(params.output_dir, params.sample_file,copy_setup)
+    Hotspot(params.output_dir, params.sample_file,copy_setup)
+    Gene_Coverage(params.output_dir, params.sample_file,copy_setup)
 }
