@@ -36,17 +36,18 @@ library(GenomicFeatures)
 ##############################
 # Load sources
 ###############################
+args <- commandArgs(trailingOnly = TRUE)
+fuseq_path <- args[1]
 
-source("//home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/R/FuSeq_functions.R")
-source("//home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/R/detectJunctionBreaks.R")
-source("//home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/R/doBiologicalFilter.R")
-source("//home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/R/integrateFusion.R")
-#### scripts for WES
-source("//home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/R/processSplitRead_WES.R") #split read processing designed for WES
-source("//home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/R/postProcessSplitRead_WES.R") #split read post-processing designed for WES
-source("//home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/R/processFEQ_WES.R") # designed for WES
-source("//home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/R/processMappedRead_WES.R") # designed for WES
-source("//home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/R/getSeqLenInfo.R") # designed for WES
+source(file.path(fuseq_path, "R", "FuSeq_functions.R"))
+source(file.path(fuseq_path, "R", "detectJunctionBreaks.R"))
+source(file.path(fuseq_path, "R", "doBiologicalFilter.R"))
+source(file.path(fuseq_path, "R", "integrateFusion.R"))
+source(file.path(fuseq_path, "R", "processSplitRead_WES.R"))
+source(file.path(fuseq_path, "R", "postProcessSplitRead_WES.R"))
+source(file.path(fuseq_path, "R", "processFEQ_WES.R"))
+source(file.path(fuseq_path, "R", "processMappedRead_WES.R"))
+source(file.path(fuseq_path, "R", "getSeqLenInfo.R"))
 
 ##############################
 # Prepare params

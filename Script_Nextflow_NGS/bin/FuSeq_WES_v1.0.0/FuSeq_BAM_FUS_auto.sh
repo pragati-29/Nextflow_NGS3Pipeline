@@ -9,26 +9,27 @@ fi
 location=$1
 csv_file=$2
 fusion_dir="$location/fusion"
-
+source "$location/setup.sh"
 # Create working directory
 mkdir -p "$fusion_dir"
 
 # Extract Sample IDs into a list
-awk -F',' 'BEGIN {OFS=","} {if (NR>1) print $(NF-2)}' "$csv_file" > "$fusion_dir/list.txt"
+#awk -F',' 'BEGIN {OFS=","} {if (NR>1) print $(NF-2)}' "$csv_file" > "$fusion_dir/list.txt"
+awk -F',' 'NR>1 {print $15","$4}' "$csv_file" > "$fusion_dir/list.txt"
 
 input="$fusion_dir/list.txt"
 cd "$fusion_dir" || exit 1
 
 # Loop over each sample
-while IFS= read -r line; do
+while IFS=',' read -r line project; do
     echo ">------BEDTOOLS INTERSECTION STARTING FOR SAMPLE ${line}------->"
 
-    bam_path="$location/basespace/Projects/create_project_test1/AppResults/${line}/Files/${line}.bam"
+    bam_path="$location/basespace/Projects/${project}/AppResults/${line}/Files/${line}.bam"
     intersected_bam="${line}_intersected.bam"
 
     # Intersect BAM with known fusions
     intersectBed -abam "$bam_path" \
-        -b "/home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/knowngeneFusions.bed" -f 1 > "$intersected_bam"
+        -b "$fuseq/knowngeneFusions.bed" -f 1 > "$intersected_bam"
 
     samtools index "$intersected_bam"
     echo ">-----${intersected_bam} CREATED------<"
@@ -36,22 +37,22 @@ while IFS= read -r line; do
     echo "Starting ${line}"
 
     bamfile="$fusion_dir/${intersected_bam}"
-    ref_json="/home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/UCSC_hg19_wes_contigSize3000_bigLen130000_r100/UCSC_hg19_wes_contigSize3000_bigLen130000_r100.json"
-    gtfSqlite="/home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/UCSC_hg19_wes_contigSize3000_bigLen130000_r100/UCSC_hg19_wes_contigSize3000_bigLen130000_r100.sqlite"
+    ref_json="$fuseq/UCSC_hg19_wes_contigSize3000_bigLen130000_r100/UCSC_hg19_wes_contigSize3000_bigLen130000_r100.json"
+    gtfSqlite="$fuseq/UCSC_hg19_wes_contigSize3000_bigLen130000_r100/UCSC_hg19_wes_contigSize3000_bigLen130000_r100.sqlite"
 
     output_dir="${line}_fusions"
     mkdir "$output_dir"
 
     # Step 1: Extract mapped and split reads
-    python3 "/home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/fuseq_wes.py" --bam "$bamfile" --gtf "$ref_json" --mapq-filter --outdir "$output_dir"
+    python3 "$fuseq/fuseq_wes.py" --bam "$bamfile" --gtf "$ref_json" --mapq-filter --outdir "$output_dir"
 
     # Step 2: Process reads with R
-    fusiondbFn="/home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/Data/Mitelman_fusiondb.RData"
-    paralogdbFn="/home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/Data/ensmbl_paralogs_grch37.RData"
+    fusiondbFn="$fuseq/Data/Mitelman_fusiondb.RData"
+    paralogdbFn="$fuseq/Data/ensmbl_paralogs_grch37.RData"
 
-    Rscript "/home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/process_fuseq_wes.R" in="$output_dir" sqlite="$gtfSqlite" fusiondb="$fusiondbFn" paralogdb="$paralogdbFn" out="$output_dir"
+    Rscript "$fuseq/process_fuseq_wes.R" "$fuseq" in="$output_dir" sqlite="$gtfSqlite" fusiondb="$fusiondbFn" paralogdb="$paralogdbFn" out="$output_dir"
 
-    Rscript "/home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/bedpeconvert.R" "$output_dir"
+    Rscript "$fuseq/bedpeconvert.R" "$output_dir"
 
     # Rename output files
     for f in FuSeq_WES_FusionFinal.txt FuSeq_WES_SR_fge_fdb.txt FuSeq_WES_SR_fge.txt \
@@ -60,7 +61,7 @@ while IFS= read -r line; do
     done
 
     # Step 3: Generate .fus summary
-    Fusion_FUS="/home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/"
+    Fusion_FUS="$fuseq/"
     Fusion_Folder="$fusion_dir/$output_dir"
 
     cp "$Fusion_FUS/fusion_summary.py" "$Fusion_Folder"
@@ -68,7 +69,7 @@ while IFS= read -r line; do
     chmod 777 "$Fusion_Folder/fusion_summary.py"
 
     echo "########### Generating FUS file ##########"
-    (cd "$Fusion_Folder" && python3 fusion_summary.py)
+    (cd "$Fusion_Folder" && python3 fusion_summary.py --fuseq "$fuseq")
     echo "########### Fus file generated ###########"
 
     echo "Ending ${line}"
