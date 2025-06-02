@@ -28,7 +28,7 @@ echo "Sample file: $csv_file"
 
 # Create directory if it doesn't exist
 mkdir -p "$cnv_dir"
-basemount-cmd refresh "${location}/basespace"
+#basemount-cmd refresh "${location}/basespace"
 
 # Extract Sample ID (15th column) and Project Name (5th column)
 awk -F',' 'BEGIN {OFS=","} {if (NR>1) print $(NF-2),$4}' "$csv_file" > "$cnv_dir/list.txt"

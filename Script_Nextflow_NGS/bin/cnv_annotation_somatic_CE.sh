@@ -13,7 +13,7 @@ fi
 location=$1
 csv_file=$2
 
-basemount-cmd refresh "${location}/basespace"
+#basemount-cmd refresh "${location}/basespace"
 
 # Load setup
 source "$location/setup.sh"
