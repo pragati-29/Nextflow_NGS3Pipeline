@@ -43,7 +43,7 @@ split_read_info = 'splitReadInfo.txt'
 split_read = pd.read_csv(split_read_info, sep="\t", header=None, usecols=[0, 4, 9], names=["ReadName", "Gene1", "Gene2"])
 
 #read the backend db csv file in the current working directory
-backend_db = pd.read_csv("/home/bioinfo/Nilesh/NGS3_test/Nextflow_Downstream/Script_Nextflow_NGS/bin/FuSeq_WES_v1.0.0/Exon_Intron_all_Region_FuSEQ.csv")
+backend_db = pd.read_csv("Exon_Intron_all_Region_FuSEQ.csv")
 
 # Split the name column in bedpe file by "--" and put the two parts in separate columns
 bedpe[['name_split1', 'name_split2']] = bedpe['name'].str.split('--', n=1, expand=True)
