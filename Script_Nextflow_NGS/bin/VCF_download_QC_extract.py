@@ -62,14 +62,14 @@ def merge_summaries(qc_dir, output_file):
 
 def main():
     parser = argparse.ArgumentParser(description="Download QC summary only for listed samples.")
-    parser.add_argument("--location", required=True, help="Base working directory")
+    parser.add_argument("--output_dir", required=True, help="Base working directory")
     parser.add_argument("--csv_file", required=True, help="CSV file with 'appsession_name' and 'Sample_ID' columns")
     args = parser.parse_args()
 
-    location = args.location
+    output_dir = args.output_dir
     csv_file = args.csv_file
-    qc_dir = os.path.join(location, "QC")
-    temp_dir = os.path.join(location, "temp_download")
+    qc_dir = os.path.join(output_dir, "QC")
+    temp_dir = os.path.join(output_dir, "temp_download")
     os.makedirs(qc_dir, exist_ok=True)
 
     # Clean previous output
@@ -93,7 +93,7 @@ def main():
         download_all_summaries(appsession_id, temp_dir)
         filter_and_copy_samples(temp_dir, qc_dir, sample_ids)
 
-    merge_summaries(qc_dir, os.path.join(location, "metrics.csv"))
+    merge_summaries(qc_dir, os.path.join(output_dir, "metrics.csv"))
 
 if __name__ == "__main__":
     main()

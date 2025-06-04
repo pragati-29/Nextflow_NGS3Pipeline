@@ -221,7 +221,7 @@ process QC {
 
     script:
     """
-    VCF_download_QC_extract.py --location "${params.output_dir}" --csv_file "${params.sample_file}"
+    VCF_download_QC_extract.py --output_dir "${params.output_dir}" --csv_file "${params.sample_file}"
     """
 }
 

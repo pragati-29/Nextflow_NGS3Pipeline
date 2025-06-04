@@ -2,14 +2,14 @@
 
 # Check for correct number of arguments
 if [ "$#" -ne 2 ]; then
-    echo "Usage: $0 <location> <csv_file>"
+    echo "Usage: $0 <output_dir> <csv_file>"
     exit 1
 fi
 
-location=$1
+output_dir=$1
 csv_file=$2
-fusion_dir="$location/fusion"
-source "$location/setup.sh"
+fusion_dir="$output_dir/fusion"
+source "$output_dir/setup.sh"
 # Create working directory
 mkdir -p "$fusion_dir"
 
@@ -24,7 +24,7 @@ cd "$fusion_dir" || exit 1
 while IFS=',' read -r line project; do
     echo ">------BEDTOOLS INTERSECTION STARTING FOR SAMPLE ${line}------->"
 
-    bam_path="$location/basespace/Projects/${project}/AppResults/${line}/Files/${line}.bam"
+    bam_path="$output_dir/basespace/Projects/${project}/AppResults/${line}/Files/${line}.bam"
     intersected_bam="${line}_intersected.bam"
 
     # Intersect BAM with known fusions

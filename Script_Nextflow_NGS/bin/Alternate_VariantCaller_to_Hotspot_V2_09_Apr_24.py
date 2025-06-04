@@ -17,13 +17,19 @@ import re
 #set the path for taking in common files
 #common_file_dir="/home/bioinfoa/Programs/Freebayes_Test_Runs/Common_files/"
 
+# Check if required arguments are passed
+if len(sys.argv) != 3:
+    print("Usage: python script.py <output_directory> <sample_file>")
+    print("Error: Missing required arguments.")
+    sys.exit(1)
+
 common_file_dir = os.environ.get("COMMON_FILE_DIR")
 freebayes_path = os.environ.get("FREEBAYES_PATH")
 print(common_file_dir)
 
 print("\n VCF Calling by Alternative Method and Hotspot for SomaticDNA or cf-DNA \n")
-path_1 = sys.argv[1]
-file1 = sys.argv[2]
+path_1 = sys.argv[1] #Output directory
+file1 = sys.argv[2] #Sample file (nf_manifest.csv)
 
 #os.system(f"basemount-cmd refresh {path_1}/basespace")
 input_filename = pd.read_csv(file1) #list can be substituted by file generated via sample_ID.py

@@ -10,15 +10,15 @@ if [ "$#" -ne 2 ]; then
 fi
 
 # Assign input arguments to variables
-location=$1
+output_dir=$1
 csv_file=$2
 
-#basemount-cmd refresh "${location}/basespace"
+#basemount-cmd refresh "${output_dir}/basespace"
 
 # Load setup
-source "$location/setup.sh"
+source "$output_dir/setup.sh"
 
-cnv_dir="$location/CNV"
+cnv_dir="$output_dir/CNV"
 mkdir -p "$cnv_dir"
 cd "$cnv_dir" || { echo "Failed to change directory to $cnv_dir"; exit 1; }
 
@@ -30,8 +30,8 @@ input="list.txt"
 while IFS=',' read -r sample_id project_name; do
     echo "Processing Sample: $sample_id, Project: $project_name"
 
-    bam_path="$location/basespace/Projects/$project_name/AppResults/$sample_id/Files/${sample_id}.bam"
-    bed_file=$(ls $location/basespace/Projects/${project_name}/AppResults/${sample_id}/Files/*.bed | awk -F/ '!($NF ~ /'${sample_id}'/) { print $0 }')  # Use static BED unless dynamically needed
+    bam_path="$output_dir/basespace/Projects/$project_name/AppResults/$sample_id/Files/${sample_id}.bam"
+    bed_file=$(ls $output_dir/basespace/Projects/${project_name}/AppResults/${sample_id}/Files/*.bed | awk -F/ '!($NF ~ /'${sample_id}'/) { print $0 }')  # Use static BED unless dynamically needed
 
     echo "BAM path: $bam_path"
     echo "BED file: $bed_file"
