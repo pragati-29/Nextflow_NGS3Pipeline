@@ -30,7 +30,7 @@ input_filename = pd.read_csv(file1) #list can be substituted by file generated v
 print ("Print Dataframe:",input_filename)
 path_2 = os.path.dirname(path_1.rstrip('/'))
 #input_filename =  sys.argv[1] #"LC-192-Tfirst-SDNA-cfDNA_samples.csv"
-output_filename = "TFirst" #input_filename.split('_')[0]
+output_filename = "Final" #input_filename.split('_')[0]
 # Read the list.txt file into a DataFram
 
 # Create a dictionary to map project names to sample IDs and test names

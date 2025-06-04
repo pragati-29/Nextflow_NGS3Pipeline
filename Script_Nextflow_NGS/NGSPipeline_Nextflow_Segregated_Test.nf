@@ -1,17 +1,20 @@
-params.input_dir = "/home/pragati_4bc/NGS3Pipeline_Nextflow/fastq_test_Nextflow"
-params.sample_file = "/home/pragati_4bc/NGS3Pipeline_Nextflow/fastq_test_Nextflow/test_ngs3_nextflow_Copy.csv"
-params.output_dir = "output"
+// Input Parameters:
+params.input_dir = "path/to/input_dir"
+params.sample_file = "path/to/nf_MANIFEST.csv"
+params.output_dir = "path/to/output"
 params.project = "old"
 params.project_name = "New_Project"
+
+// Upstream Processes:
 process Renaming {
     publishDir params.output_dir, mode: 'copy'
 
     output:
-    path "output.csv"
+    path "bs_compliant_sample_renamed.csv"
 
     script:
     """
-    Rename_combined.py "${params.input_dir}" "${params.sample_file}" "output.csv"
+    Rename_combined.py "${params.input_dir}" "${params.sample_file}" "bs_compliant_sample_renamed.csv"
     """
 }
 process create_project {
@@ -36,11 +39,11 @@ process extract_and_upload_samples {
     path sample_file
 
     output:
-    path "new_file_test.csv"
+    path "preanalysis_details.csv"
 
     script:
     """
-    extract_and_upload_samples.py "${sample_file}" "${params.input_dir}" new_file_test.csv
+    bs_preanalysis.py "${sample_file}" "${params.input_dir}" preanalysis_details.csv
     """
 }
 process preprocessing_for_launch {
@@ -50,13 +53,14 @@ process preprocessing_for_launch {
     path sample_file
 
     output:
-    path "test_file.csv"
+    path "nf_MANIFEST.csv"
 
     script:
     """
-    preprocessing_for_launch.py "${sample_file}" test_file.csv
+    preprocessing_for_launch.py "${sample_file}" nf_final_MANIFEST.csv
     """
 }
+// Downstream processes:
 process Target_first {
     input:
     path sample_file
@@ -196,6 +200,7 @@ process CopySetupScript {
 
     output:
     stdout
+
     script:
     """
     cd "${params.output_dir}"
@@ -322,11 +327,11 @@ process Gene_Coverage {
 }
 
 workflow {
-    copy_setup=CopySetupScript(params.output_dir)
-    QC(params.output_dir, params.sample_file,copy_setup)
-    CNV_FeV2(params.output_dir, params.sample_file,copy_setup)
-    CNV_Indiegene(params.output_dir, params.sample_file,copy_setup)
-    DNA_fusion(params.output_dir, params.sample_file,copy_setup)
-    Hotspot(params.output_dir, params.sample_file,copy_setup)
-    Gene_Coverage(params.output_dir, params.sample_file,copy_setup)
+    copy_setup = CopySetupScript(params.output_dir)
+    QC(params.output_dir, params.sample_file, copy_setup)
+    CNV_FeV2(params.output_dir, params.sample_file, copy_setup)
+    CNV_Indiegene(params.output_dir, params.sample_file, copy_setup)
+    DNA_fusion(params.output_dir, params.sample_file, copy_setup)
+    Hotspot(params.output_dir, params.sample_file, copy_setup)
+    Gene_Coverage(params.output_dir, params.sample_file, copy_setup)
 }

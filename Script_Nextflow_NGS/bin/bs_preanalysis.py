@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+
+"""Extract project and biosample IDs, upload datasets, and generate a CSV output."""
+
 import pandas as pd
 import subprocess
 import argparse

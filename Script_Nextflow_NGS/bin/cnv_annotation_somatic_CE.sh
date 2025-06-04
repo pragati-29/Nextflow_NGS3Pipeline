@@ -5,7 +5,7 @@ set -euo pipefail
 
 # Ensure correct number of arguments
 if [ "$#" -ne 2 ]; then
-    echo "Usage: $0 <location> <csv_file>"
+    echo "Usage: $0 <output_dir> <csv_file>"
     exit 1
 fi
 
