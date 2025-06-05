@@ -241,7 +241,7 @@ process CNV_FeV2 {
     #bash ${projectDir}/bin/CNV_New.sh "${params.output_dir}" "${params.sample_file}"
     if awk -F',' 'NR>1 && \$1 == "TARGET_FIRST"' "${params.sample_file}" | grep -q .; then
         echo "Running CNV_FeV2 because TARGET_FIRST is present"
-        bash ${projectDir}/bin/CNV_New.sh "${params.output_dir}" "${params.sample_file}"
+        bash ${projectDir}/bin/CNV_somatic_FeV2.sh "${params.output_dir}" "${params.sample_file}"
     else
         echo "Skipping CNV_FeV2: TARGET_FIRST not found in first column"
     fi

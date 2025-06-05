@@ -94,6 +94,8 @@ def main():
         filter_and_copy_samples(temp_dir, qc_dir, sample_ids)
 
     merge_summaries(qc_dir, os.path.join(output_dir, "metrics.csv"))
+    if os.path.exists(temp_dir):
+        shutil.rmtree(temp_dir)
 
 if __name__ == "__main__":
     main()
