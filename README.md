@@ -1,7 +1,20 @@
 # Nextflow_NGS3Pipeline 
 ## Aim:- Implementation of NGS3Pipeline in Nextflow 
 ## Overview 
-This Nextflow pipeline is designed for comprehensive downstream analysis of next-generation sequencing (NGS) data. It supports the execution of multiple processes CNV, gene coverage, hotspot, QC, and DNA fusion. You will need to provide a csv file where you will keep all the information regarding samples and in output folder you will get subfolders for each process (CNV, Hotspot, QC, DNA Fusion, Gene coverage).  
+This Nextflow pipeline is designed for comprehensive downstream analysis of next-generation sequencing (NGS) data. It supports the execution of multiple processes CNV, gene coverage, hotspot, QC, and DNA fusion. You will need to provide a csv file where you will keep all the information regarding samples and in output folder you will get subfolders for each process (CNV, Hotspot, QC, DNA Fusion, Gene coverage).
+## Steps to run pipeline
+  1. Install:
+      * nextflow
+      * python
+      * bs
+      * all required tool for downstream process
+  2. Clone github repository
+  3. Edit setup.sh file from bin folder of repository
+  4. Create csv file manually or from upstream output process (nf_final_MENIFEST.nf)
+  5. Do basemount in output folder and keep csv file there.
+  6. Run the command for nextflow pipeline
+
+      ` nextflow run Path/to/NGSPipeline_Nextflow_Segregated_Test.nf --input_dir path/to/input_folder --sample_file path/to/nf_final_MANIFEST.csv --output_dir path/output_folder ` 
 ## Requirements: -
   * Nextflow
   * Python3
@@ -58,24 +71,35 @@ This Nextflow pipeline is designed for comprehensive downstream analysis of next
      QC:- It takes QC of sample from basespace.   
         Input: params.output_dir, params.sample_file (sample file - nf_final_MANIFEST.csv) 
         Output: stdout 
+        script: bs command
      CNV_FeV2:- It analyse CNV for FeV2 sample
         Input: params.output_dir, params.sample_file (sample file - nf_final_MANIFEST.csv)
         Output: *
+        Script: CNV_somatic_FeV2.sh
+        Tool: control freec 
      CNV_Indiegene:- 
         Input: params.output_dir, params.sample_file (sample file - nf_final_MANIFEST.csv)
         Output: *
+        Script: cnv_annotation_somatic_CE.sh
+        Tool: control freec
      DNA_fusion:-
         Input: params.output_dir, params.sample_file (sample file - nf_final_MANIFEST.csv)
         Output: *_fusions, *intersected.bam, *intersected.bam.bai
+        Script: FuSeq_BAM_FUS_auto.sh
+        Tool: fuseq
      Hotspot
         Input: params.output_dir, params.sample_file (sample file - nf_final_MANIFEST.csv)
         Output: *_alt_pipeline.vcf, *_Hotspot_V2.xlsx"
+        Script: Alternate_VariantCaller_to_Hotspot_V2_09_Apr_24.py
+        Tool: freebayes
      Gene_Coverage
         Input: params.output_dir, params.sample_file (sample file - nf_final_MANIFEST.csv)
         Output: *
+        Script: Gene_Coverage_via_Mosdepth_V2.py
+        Tool: mosdepth
 ## Process to run Nextflow NGSpipline
  #### Create CSV file
-    "nf_MANIFEST.csv" 
+    "nf_final_MANIFEST.csv" 
     Please be careful when providing sample ids
     You just have to fill columns : Test_Name,Sample_Type,Capturing_Kit,Project_name,file_name (file_name is sample ids)
     Example:
@@ -91,16 +115,16 @@ This Nextflow pipeline is designed for comprehensive downstream analysis of next
   #### Run script from terminal
      Run the script: 
      
-     ```nextflow run Path/project_names_using_csv_file_ngs3_nextflow.nf --input_dir path/input_folder --sample_file path/test_ngs3_nextflow_Copy.csv --output_dir path/output_folder``` 
+     ```nextflow run Path/to/NGSPipeline_Nextflow_Segregated_Test.nf --input_dir path/to/input_folder --sample_file path/to/nf_final_MANIFEST.csv --output_dir path/output_folder``` 
                        or
      When you have new project names in csv file:
      
-    ``` nextflow run Path/project_names_using_csv_file_ngs3_nextflow.nf --input_dir path/input_folder --sample_file path/test_ngs3_nextflow_Copy.csv --output_dir path/output_folder --project new ```
+    ``` nextflow run Path/to/NGSPipeline_Nextflow_Segregated_Test.nf --input_dir path/to/input_folder --sample_file path/to/nf_final_MANIFEST.csv --output_dir path/output_folder --project new ```
    
   #### Steps for running nextflow script: https://docs.google.com/document/d/18IB0OyzrwdjB-TRqhlxHC4fQSoJ3cr750b5wpTMfFBs/edit?tab=t.0
 
-  **Notes:** 
-  1.Annotation and CGI are not included in this process. 
+  > [!NOTE] 
+  1.Annotation and CGI are not included in this process.  
   2.Run Upstream and Downstream separately.
   
   
