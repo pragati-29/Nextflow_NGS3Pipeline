@@ -1,8 +1,8 @@
 # Nextflow_NGS3Pipeline 
 ## Aim:- Implementation of NGS3Pipeline in Nextflow 
 ## Overview 
-The Nextflow NGS3Pipeline automates renaming, uploading, and analysis of NGS data using Nextflow. It takes FASTQ files and a sample CSV as input and processes them through multiple steps like renaming, project creation, basespace upload, basespace analysis and downstream analyses (e.g., CNV, QC, fusion, gene coverage). The workflow is structured around parameter definitions, individual processes, and a workflow definition.
-## Requirements: 
+This Nextflow pipeline is designed for comprehensive downstream analysis of next-generation sequencing (NGS) data. It supports the execution of multiple processes CNV, gene coverage, hotspot, QC, and DNA fusion. You will need to provide a csv file where you will keep all the information regarding samples and in output folder you will get subfolders for each process (CNV, Hotspot, QC, DNA Fusion, Gene coverage).  
+## Requirements: -
   * Nextflow
   * Python3
     * subprocess
@@ -52,70 +52,30 @@ The Nextflow NGS3Pipeline automates renaming, uploading, and analysis of NGS dat
     params.project (Use this parameter only when you want to create a new project, it can create multiple projects just you need to provide project names in csv file)
 ####  Process
      - Every process has its separate script in the bin folder.
-     - For downstream processes, the scripts are the same as the previous ones, but you need to change the path in each script of the downstream for now but I will resolve this ASAP.
-     Renaming 
-        Input: "${params.input_dir}" "${params.sample_file}" "output.csv" 
-        Output: "output.csv" 
-     create_project
-         Input: "output.csv"
-         output: "created_proj.csv"
-     extract_and_upload_samples 
-        Input: "created_proj.csv" 
-        Output: "new_file_test.csv" 
-     preprocessing_for_launch  
-        Input: "new_file_test.csv" 
-        Output: "test_file.csv" 
-     Target_first   
-        Input: "test_file.csv" 
+     CopySetupScript :- It copies setup file in the output directory.
+        Input: "${params.output_dir}" 
         Output: stdout 
-     Indiegene_GE_Som
-        Input: "test_file.csv"
-        Output: stdout
-     Indiegene_GE_germ
-        Input: "test_file.csv"
-        Output: stdout
-     Indiegene_CE_som
-        Input: "test_file.csv"
-        Output: stdout
-     Indiegene_CE_germ
-        Input: "test_file.csv"
-        Output: stdout
-     SE8_som
-        Input: "test_file.csv"
-        Output: stdout
-     SE8_germ
-        Input: "test_file.csv"
-        Output: stdout
-     CDS
-        Input: "test_file.csv"
-        Output: stdout
-     RNA_CT
-        Input: "test_file.csv"
-        Output: stdout
-     RNA_SE8
-        Input: "test_file.csv"
-        Output: stdout
-     Indiegene_CEFu
-        Input: "test_file.csv"
-        Output: stdout
-     QC
-        Input: Output directory, "test_file.csv"
-        Output: stdout
-     CNV
-        Input: Output directory, "test_file.csv"
-        oytput: "*"
-     DNA_fusion
-        Input:Output directory, "test_file.csv"
-        Output: "*_fusions", "*intersected.bam", "*intersected.bam.bai"
+     QC:- It takes QC of sample from basespace.   
+        Input: params.output_dir, params.sample_file (sample file - nf_final_MANIFEST.csv) 
+        Output: stdout 
+     CNV_FeV2:- It analyse CNV for FeV2 sample
+        Input: params.output_dir, params.sample_file (sample file - nf_final_MANIFEST.csv)
+        Output: *
+     CNV_Indiegene:- 
+        Input: params.output_dir, params.sample_file (sample file - nf_final_MANIFEST.csv)
+        Output: *
+     DNA_fusion:-
+        Input: params.output_dir, params.sample_file (sample file - nf_final_MANIFEST.csv)
+        Output: *_fusions, *intersected.bam, *intersected.bam.bai
      Hotspot
-        Input:Output directory, "test_file.csv"
-        Output: "*_alt_pipeline.vcf", "*_Hotspot_V2.xlsx"
+        Input: params.output_dir, params.sample_file (sample file - nf_final_MANIFEST.csv)
+        Output: *_alt_pipeline.vcf, *_Hotspot_V2.xlsx"
      Gene_Coverage
-        Input: Output directory, "test_file.csv"
-        Output: "*"
+        Input: params.output_dir, params.sample_file (sample file - nf_final_MANIFEST.csv)
+        Output: *
 ## Process to run Nextflow NGSpipline
  #### Create CSV file
-    test_ngs3_nextflow_Copy.csv 
+    "nf_MANIFEST.csv" 
     Please be careful when providing sample ids
     You just have to fill columns : Test_Name,Sample_Type,Capturing_Kit,Project_name,file_name (file_name is sample ids)
     Example:
@@ -127,11 +87,15 @@ The Nextflow NGS3Pipeline automates renaming, uploading, and analysis of NGS dat
       1. Test_Name:- INDIEGENE, TARGET_FIRST, ABSOLUTE, SE8, ST8, CT (capital letter) etc
       2. Sample_Type:- DNA
       3. Capturing_Kit:- GE,CE,SE8,FEV2F2both
-      Note- Use test_file_for_nextflow.py file to create csv file if you do not want to create manually then Provide Project name and recheck sample name.
+      Note- Use nf_manifest_maker.py file to create csv file if you do not want to create manually then Provide Project name and recheck sample name.
   #### Run script from terminal
-     Run the script: nextflow run Path/project_names_using_csv_file_ngs3_nextflow.nf --input_dir path/input_folder --sample_file path/test_ngs3_nextflow_Copy.csv --output_dir path/output_folder 
+     Run the script: 
+     
+     ```nextflow run Path/project_names_using_csv_file_ngs3_nextflow.nf --input_dir path/input_folder --sample_file path/test_ngs3_nextflow_Copy.csv --output_dir path/output_folder``` 
                        or
-     When you have new project names in csv file: nextflow run Path/project_names_using_csv_file_ngs3_nextflow.nf --input_dir path/input_folder --sample_file path/test_ngs3_nextflow_Copy.csv --output_dir path/output_folder --project new 
+     When you have new project names in csv file:
+     
+    ``` nextflow run Path/project_names_using_csv_file_ngs3_nextflow.nf --input_dir path/input_folder --sample_file path/test_ngs3_nextflow_Copy.csv --output_dir path/output_folder --project new ```
    
   #### Steps for running nextflow script: https://docs.google.com/document/d/18IB0OyzrwdjB-TRqhlxHC4fQSoJ3cr750b5wpTMfFBs/edit?tab=t.0
 
