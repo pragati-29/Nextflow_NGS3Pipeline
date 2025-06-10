@@ -1,7 +1,31 @@
 # Nextflow_NGS3Pipeline 
 ## Aim:- Implementation of NGS3Pipeline in Nextflow 
 ## Overview 
-The Nextflow NGS3Pipeline automates renaming, uploading, and analysis of NGS data using Nextflow. It takes FASTQ files and a sample CSV as input and processes them through multiple steps like renaming, project creation, basespace upload, basespace analysis and downstream analyses (e.g., CNV, QC, fusion, gene coverage). The workflow is structured around parameter definitions, individual processes, and a workflow definition.
+The Nextflow NGS3Pipeline automates renaming, uploading, and analysis of NGS data using Nextflow. It takes FASTQ files and a sample CSV as input and processes them through multiple steps like renaming, project creation, basespace upload, basespace analysis. The workflow is structured around parameter definitions, individual processes, and a workflow definition.
+## Steps to run pipeline
+  1. Install:
+      * nextflow
+      * python
+      * Install bs command for upstream process
+> [!NOTE]
+      You can use nf_ngs3pipeline_env.yml file for installation of these tools.
+  ```bash
+  conda env create -f /path/to/nf_ngs3pipeline_env.yml
+  ```
+  2. Clone github repository
+     ```bash
+     git clone --branch Upstream https://github.com/pragati-29/Nextflow_NGS3Pipeline.git
+     ```
+  4. Edit setup.sh file from bin folder of repository and run it.
+  6. Create csv file manually or from nf_manifest_maker.py script. keep nf_manifest_maker.py in fastq file (input_folder) directory.
+  8. Run the command for nextflow pipeline
+
+      ```bash
+     nextflow run Path/to/NGSPipeline_Nextflow_Segregated_Test.nf \
+      --input_dir path/to/input_folder \
+      --sample_file path/to/nf_final_MANIFEST.csv \
+      --output_dir path/output_folder
+      ``` 
 ## Requirements: 
   * Nextflow
   * Python3
@@ -31,11 +55,6 @@ The Nextflow NGS3Pipeline automates renaming, uploading, and analysis of NGS dat
       sudo mv bs-linux /usr/local/bin/bs
   * login: 
       bs auth
-## Clone GitHub repository
-   - Go to Source Control of VS Code
-   - Click on clone
-   - Paste link of your repository
-   - Clone using terminal: git clone "repository"
 ## Input:
   * Folder of fastq files (All types)
   * csv file
@@ -46,76 +65,77 @@ The Nextflow NGS3Pipeline automates renaming, uploading, and analysis of NGS dat
   * Analysis of samples
 ## Sections of the Script:
 #### Parameter Definitions
-    params.input_dir 
-    params.sample_file 
-    params.output_dir 
-    params.project (Use this parameter only when you want to create a new project, it can create multiple projects just you need to provide project names in csv file)
+| Parameter           | Definition                                                                                  |
+|---------------------|----------------------------------------------------------------------------------------------|
+| `params.input_dir`  | Input directory having FASTQ files                                                           |
+| `params.sample_file`| csv file (nf_manifest_maker.py file output )                                                                |
+| `params.output_dir` | Output directory MUST have `basemount` and `nf_final_MANIFEST.csv` file                      |
+| `params.project`    | Use this parameter only when you want to create a new project. It can create multiple projects—just provide project names in the CSV file |
 ####  Process
      - Every process has its separate script in the bin folder.
-     - For downstream processes, the scripts are the same as the previous ones, but you need to change the path in each script of the downstream for now but I will resolve this ASAP.
      Renaming 
         Input: "${params.input_dir}" "${params.sample_file}" "output.csv" 
-        Output: "output.csv" 
+        Output: "bs_compliant_sample_renamed.csv" 
+        Script: Rename_combined.py
      create_project
          Input: "output.csv"
          output: "created_proj.csv"
+         Script: Create_project.py
      extract_and_upload_samples 
         Input: "created_proj.csv" 
-        Output: "new_file_test.csv" 
+        Output: "preanalysis_details.csv"
+        Script: bs_preanalysis.py
      preprocessing_for_launch  
         Input: "new_file_test.csv" 
-        Output: "test_file.csv" 
+        Output: "nf_final_MANIFEST.csv" 
+        Script: preprocessing_for_launch.py
      Target_first   
-        Input: "test_file.csv" 
+        Input: "nf_final_MANIFEST.csv" 
         Output: stdout 
+        Script: Target_First.py
      Indiegene_GE_Som
-        Input: "test_file.csv"
+        Input: "nf_final_MANIFEST.csv"
         Output: stdout
+        Script: Indiegene_GE_som.py
      Indiegene_GE_germ
-        Input: "test_file.csv"
+        Input: "nf_final_MANIFEST.csv"
         Output: stdout
+        Script: Indiegene_GE_germ.py
      Indiegene_CE_som
-        Input: "test_file.csv"
+        Input: "nf_final_MANIFEST.csv"
         Output: stdout
+        Script: Indiegene_CE_som.py
      Indiegene_CE_germ
-        Input: "test_file.csv"
+        Input: "nf_final_MANIFEST.csv"
         Output: stdout
+        Script: Indiegene_CE_germ.py
      SE8_som
-        Input: "test_file.csv"
+        Input: "nf_final_MANIFEST.csv"
         Output: stdout
+        Script: SE8_som.py
      SE8_germ
-        Input: "test_file.csv"
+        Input: "nf_final_MANIFEST.csv"
         Output: stdout
+        Script: SE8_germ.py
      CDS
-        Input: "test_file.csv"
+        Input: "nf_final_MANIFEST.csv"
         Output: stdout
+        Script: CDS.py
      RNA_CT
-        Input: "test_file.csv"
+        Input: "nf_final_MANIFEST.csv"
         Output: stdout
+        Script: RNA_CT.py
      RNA_SE8
-        Input: "test_file.csv"
+        Input: "nf_final_MANIFEST.csv"
         Output: stdout
+        Script: RNA_ST8.py
      Indiegene_CEFu
-        Input: "test_file.csv"
+        Input: "nf_final_MANIFEST.csv"
         Output: stdout
-     QC
-        Input: Output directory, "test_file.csv"
-        Output: stdout
-     CNV
-        Input: Output directory, "test_file.csv"
-        oytput: "*"
-     DNA_fusion
-        Input:Output directory, "test_file.csv"
-        Output: "*_fusions", "*intersected.bam", "*intersected.bam.bai"
-     Hotspot
-        Input:Output directory, "test_file.csv"
-        Output: "*_alt_pipeline.vcf", "*_Hotspot_V2.xlsx"
-     Gene_Coverage
-        Input: Output directory, "test_file.csv"
-        Output: "*"
+        Script: Indiegene_CEFu.py
 ## Process to run Nextflow NGSpipline
  #### Create CSV file
-    test_ngs3_nextflow_Copy.csv 
+    nf_final_MANIFEST.csv 
     Please be careful when providing sample ids
     You just have to fill columns : Test_Name,Sample_Type,Capturing_Kit,Project_name,file_name (file_name is sample ids)
     Example:
@@ -127,17 +147,22 @@ The Nextflow NGS3Pipeline automates renaming, uploading, and analysis of NGS dat
       1. Test_Name:- INDIEGENE, TARGET_FIRST, ABSOLUTE, SE8, ST8, CT (capital letter) etc
       2. Sample_Type:- DNA
       3. Capturing_Kit:- GE,CE,SE8,FEV2F2both
-      Note- Use test_file_for_nextflow.py file to create csv file if you do not want to create manually then Provide Project name and recheck sample name.
+      Note- Use nf_manifest_maker.py file to create csv file if you do not want to create manually then Provide Project name and recheck sample name.
   #### Run script from terminal
-     Run the script: nextflow run Path/project_names_using_csv_file_ngs3_nextflow.nf --input_dir path/input_folder --sample_file path/test_ngs3_nextflow_Copy.csv --output_dir path/output_folder 
+     Run the script: 
+     
+     ```bash
+     nextflow run Path/to/NGSPipeline_Nextflow_Segregated_Test.nf --input_dir path/to/input_folder --sample_file path/to/nf_final_MANIFEST.csv --output_dir path/output_folder
+     ``` 
                        or
-     When you have new project names in csv file: nextflow run Path/project_names_using_csv_file_ngs3_nextflow.nf --input_dir path/input_folder --sample_file path/test_ngs3_nextflow_Copy.csv --output_dir path/output_folder --project new 
-   
-  #### Steps for running nextflow script: https://docs.google.com/document/d/18IB0OyzrwdjB-TRqhlxHC4fQSoJ3cr750b5wpTMfFBs/edit?tab=t.0
+     When you have new project names in csv file:
+     
+    ```bash 
+    nextflow run Path/to/NGSPipeline_Nextflow_Segregated_Test.nf --input_dir path/to/input_folder --sample_file path/to/nf_final_MANIFEST.csv --output_dir path/output_folder --project new 
+    ```
 
-  **Notes:** 
-  1.Annotation and CGI are not included in this process. 
-  
+> [!NOTE] 
+  1.Annotation and CGI are not included in this process.  
   2.Run Upstream and Downstream separately.
   
   
