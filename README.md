@@ -17,7 +17,7 @@ This Nextflow pipeline is designed for comprehensive downstream analysis of next
           * IGV
             You can use nf_ngs3pipeline_env.yml file for installation of these tools.
             ```bash
-            conda env create -f /home/bioinfoa/Pragati/Downstream_Test/output/nf_ngs3pipeline_env.yml
+            conda env create -f /path/to/nf_ngs3pipeline_env.yml
             ```
   2. Clone github repository
      ```bash
@@ -130,8 +130,6 @@ This Nextflow pipeline is designed for comprehensive downstream analysis of next
     ```bash 
     nextflow run Path/to/NGSPipeline_Nextflow_Segregated_Test.nf --input_dir path/to/input_folder --sample_file path/to/nf_final_MANIFEST.csv --output_dir path/output_folder --project new 
     ```
-   
-  #### Steps for running nextflow script: https://docs.google.com/document/d/18IB0OyzrwdjB-TRqhlxHC4fQSoJ3cr750b5wpTMfFBs/edit?tab=t.0
 
   > [!NOTE] 
   1.Annotation and CGI are not included in this process.  
