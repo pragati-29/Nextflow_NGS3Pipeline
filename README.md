@@ -7,14 +7,33 @@ This Nextflow pipeline is designed for comprehensive downstream analysis of next
       * nextflow
       * python
       * bs
-      * all required tool for downstream process
+      * all required tools for downstream process
+          * Mosdepth
+          * Freebayes
+          * sambamba
+          * samtools
+          * fuseq
+          * control freec
+          * IGV
+            You can use nf_ngs3pipeline_env.yml file for installation of these tools.
+            ```bash
+            conda env create -f /home/bioinfoa/Pragati/Downstream_Test/output/nf_ngs3pipeline_env.yml
+            ```
   2. Clone github repository
-  3. Edit setup.sh file from bin folder of repository
-  4. Create csv file manually or from upstream output process (nf_final_MENIFEST.nf)
-  5. Do basemount in output folder and keep csv file there.
-  6. Run the command for nextflow pipeline
+     ```bash
+     git clone --branch Downstream https://github.com/pragati-29/Nextflow_NGS3Pipeline.git
+     ```
+  4. Edit setup.sh file from bin folder of repository
+  5. Create csv file manually or from upstream output process (nf_final_MENIFEST.csv)
+  6. Do basemount in output folder and keep csv file there.
+  7. Run the command for nextflow pipeline
 
-      ` nextflow run Path/to/NGSPipeline_Nextflow_Segregated_Test.nf --input_dir path/to/input_folder --sample_file path/to/nf_final_MANIFEST.csv --output_dir path/output_folder ` 
+      ```bash
+     nextflow run Path/to/NGSPipeline_Nextflow_Segregated_Test.nf \
+      --input_dir path/to/input_folder \
+      --sample_file path/to/nf_final_MANIFEST.csv \
+      --output_dir path/output_folder
+      ``` 
 ## Requirements: -
   * Nextflow
   * Python3
@@ -25,16 +44,6 @@ This Nextflow pipeline is designed for comprehensive downstream analysis of next
     * datetime 
   * Basespace Illumina access
   * Java (For Nextflow installation)
-## Nextflow installation
-  * Install SDKMAN:
-      curl -s https://get.sdkman.io | bash
-  * Install JAVA:
-      sdk install java 17.0.10-tem
-  * Install Nextflow:
-      curl -s https://get.nextflow.io | bash
-  * Make Nextflow executable:
-      chmod +x nextflow
-  * sudo mv nextflow /usr/local/bin/
 ## Basespace installation
   * Install bs: 
       wget https://github.com/basespace/basespace-cli/releases/download/v0.9.93/bs-linux
@@ -44,25 +53,22 @@ This Nextflow pipeline is designed for comprehensive downstream analysis of next
       sudo mv bs-linux /usr/local/bin/bs
   * login: 
       bs auth
-## Clone GitHub repository
-   - Go to Source Control of VS Code
-   - Click on clone
-   - Paste link of your repository
-   - Clone using terminal: git clone "repository"
 ## Input:
   * Folder of fastq files (All types)
-  * csv file
+  * csv file 
   * Output Folder
 ## Output:
-  * Renaming of samples for uploading in basespace
-  * Uploaded samples in basespace projects
-  * Analysis of samples
+  * Subfolders for each downstream process that contain their output data
 ## Sections of the Script:
 #### Parameter Definitions
-    params.input_dir 
-    params.sample_file 
-    params.output_dir 
-    params.project (Use this parameter only when you want to create a new project, it can create multiple projects just you need to provide project names in csv file)
+
+| Parameter           | Definition                                                                                  |
+|---------------------|----------------------------------------------------------------------------------------------|
+| `params.input_dir`  | Input directory having FASTQ files                                                           |
+| `params.sample_file`| `nf_final_MANIFEST.csv` file                                                                 |
+| `params.output_dir` | Output directory MUST have `basemount` and `nf_final_MANIFEST.csv` file                      |
+| `params.project`    | Use this parameter only when you want to create a new project. It can create multiple projects—just provide project names in the CSV file |
+
 ####  Process
      - Every process has its separate script in the bin folder.
      CopySetupScript :- It copies setup file in the output directory.
@@ -115,11 +121,15 @@ This Nextflow pipeline is designed for comprehensive downstream analysis of next
   #### Run script from terminal
      Run the script: 
      
-     ```nextflow run Path/to/NGSPipeline_Nextflow_Segregated_Test.nf --input_dir path/to/input_folder --sample_file path/to/nf_final_MANIFEST.csv --output_dir path/output_folder``` 
+     ```bash
+     nextflow run Path/to/NGSPipeline_Nextflow_Segregated_Test.nf --input_dir path/to/input_folder --sample_file path/to/nf_final_MANIFEST.csv --output_dir path/output_folder
+     ``` 
                        or
      When you have new project names in csv file:
      
-    ``` nextflow run Path/to/NGSPipeline_Nextflow_Segregated_Test.nf --input_dir path/to/input_folder --sample_file path/to/nf_final_MANIFEST.csv --output_dir path/output_folder --project new ```
+    ```bash 
+    nextflow run Path/to/NGSPipeline_Nextflow_Segregated_Test.nf --input_dir path/to/input_folder --sample_file path/to/nf_final_MANIFEST.csv --output_dir path/output_folder --project new 
+    ```
    
   #### Steps for running nextflow script: https://docs.google.com/document/d/18IB0OyzrwdjB-TRqhlxHC4fQSoJ3cr750b5wpTMfFBs/edit?tab=t.0
 
