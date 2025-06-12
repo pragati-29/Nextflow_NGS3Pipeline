@@ -53,14 +53,13 @@ process preprocessing_for_launch {
     path sample_file
 
     output:
-    path "nf_MANIFEST.csv"
+    path "nf_final_MANIFEST.csv"
 
     script:
     """
     preprocessing_for_launch.py "${sample_file}" nf_final_MANIFEST.csv
     """
 }
-// Downstream processes:
 process Target_first {
     input:
     path sample_file
@@ -193,7 +192,7 @@ process Indiegene_CEFu {
     Indiegene_CEFu.py "${sample_file}"
     """
 }
-
+// Downstream processes:
 process CopySetupScript {
     input:
     val output_dir
