@@ -147,10 +147,12 @@ The Nextflow NGS3Pipeline automates renaming, uploading, and analysis of NGS dat
 You just have to fill columns : ``Test_Name``,``Sample_Type``,``Capturing_Kit``,``Project_name``,``file_name`` (file_name is sample ids)
 
 Example:
-File Name: 1. WLVAR-B-D-GE-Nextflow-Test-S1_S1_L001_R1_001.fastq.gz (Already Renamed)
-              Sample Name will be : WLVAR-B-D-GE-Nextflow-Test-S1
-           2. XAVAB_B1B2_D_L2_SE8_Nextflow_Test_R1.fastq.gz (Not Renamed)
-              Sample Name will be : XAVAB_B1B2_D_L2_SE8_Nextflow_Test
+File Name: 
+1. WLVAR-B-D-GE-Nextflow-Test-S1_S1_L001_R1_001.fastq.gz (Already Renamed)
+>  Sample Name will be : WLVAR-B-D-GE-Nextflow-Test-S1
+              
+2. XAVAB_B1B2_D_L2_SE8_Nextflow_Test_R1.fastq.gz (Not Renamed)
+>  Sample Name will be : XAVAB_B1B2_D_L2_SE8_Nextflow_Test
 
 * ``Test_Name``,``Sample_Type``,``Capturing_Kit`` column values are **casesensitive**
   1. Test_Name:- INDIEGENE, TARGET_FIRST, ABSOLUTE, SE8, ST8, CT (capital letter) etc
