@@ -16,12 +16,12 @@ This Nextflow pipeline is designed for comprehensive downstream analysis of next
           * control freec
           * IGV
 
-      > [!NOTE]
-      > You can use nf_ngs3pipeline_env.yml file for installation of these tools.
-      >
-      > ```bash
-      > conda env create -f /path/to/nf_ngs3pipeline_env.yml
-      > ```
+  > [!NOTE]
+  > You can use nf_ngs3pipeline_env.yml file for installation of these tools.
+  >
+  > ```bash
+  > conda env create -f /path/to/nf_ngs3pipeline_env.yml
+  > ```
 
   2. Clone github repository
      ```bash
