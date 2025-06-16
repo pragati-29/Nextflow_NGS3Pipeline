@@ -8,6 +8,8 @@ params.project_name = "New_Project"
 // Upstream Processes:
 process Renaming {
     publishDir params.output_dir, mode: 'copy'
+    input:
+    val setup
 
     output:
     path "bs_compliant_sample_renamed.csv"
@@ -23,6 +25,7 @@ process create_project {
     input:
     path sample_file
     val project_name
+    val setup
 
     output:
     path "created_proj.csv"
@@ -37,6 +40,7 @@ process extract_and_upload_samples {
 
     input:
     path sample_file
+    val setup
 
     output:
     path "preanalysis_details.csv"
@@ -51,6 +55,7 @@ process preprocessing_for_launch {
 
     input:
     path sample_file
+    val setup
 
     output:
     path "nf_final_MANIFEST.csv"
@@ -60,10 +65,11 @@ process preprocessing_for_launch {
     preprocessing_for_launch.py "${sample_file}" nf_final_MANIFEST.csv
     """
 }
-// Downstream processes:
+
 process Target_first {
     input:
     path sample_file
+    val setup
 
     output:
     stdout
@@ -76,6 +82,7 @@ process Target_first {
 process Indiegene_GE_Som {
     input:
     path sample_file
+    val setup
 
     output:
     stdout
@@ -88,6 +95,7 @@ process Indiegene_GE_Som {
 process Indiegene_GE_germ {
     input:
     path sample_file
+    val setup
 
     output:
     stdout
@@ -100,6 +108,7 @@ process Indiegene_GE_germ {
 process Indiegene_CE_som {
     input:
     path sample_file
+    val setup
 
     output:
     stdout
@@ -112,6 +121,7 @@ process Indiegene_CE_som {
 process Indiegene_CE_germ {
     input:
     path sample_file
+    val setup
 
     output:
     stdout
@@ -124,6 +134,7 @@ process Indiegene_CE_germ {
 process SE8_som {
     input:
     path sample_file
+    val setup
 
     output:
     stdout
@@ -136,6 +147,7 @@ process SE8_som {
 process SE8_germ {
     input:
     path sample_file
+    val setup
 
     output:
     stdout
@@ -148,6 +160,7 @@ process SE8_germ {
 process CDS {
     input:
     path sample_file
+    val setup
 
     output:
     stdout
@@ -160,6 +173,7 @@ process CDS {
 process RNA_CT {
     input:
     path sample_file
+    val setup
 
     output:
     stdout
@@ -172,6 +186,7 @@ process RNA_CT {
 process RNA_SE8 {
     input:
     path sample_file
+    val setup
 
     output:
     stdout
@@ -184,6 +199,7 @@ process RNA_SE8 {
 process Indiegene_CEFu {
     input:
     path sample_file
+    val setup
 
     output:
     stdout
@@ -206,29 +222,32 @@ process CopySetupScript {
     #basemount basespace
     cd
     cp ${projectDir}/bin/setup.sh "${params.output_dir}"/setup.sh
+    chmod +x "${params.output_dir}"/setup.sh
+    cd "${params.output_dir}"
+    ./setup.sh
+    cd
     """
 }
 
-
 workflow{
-    Renaming()
+    copy_setup = CopySetupScript(params.output_dir)
+    Renaming(copy_setup)
     if (params.project == "new") {
-       project_output = create_project(Renaming.out, params.project_name)
+       project_output = create_project(Renaming.out, params.project_name,copy_setup)
     } else {
         project_output = Renaming.out
     }
-    extract_and_upload_samples(project_output)
-    preprocessing_for_launch(extract_and_upload_samples.out)
-    Target_first(preprocessing_for_launch.out)
-    Indiegene_GE_Som(preprocessing_for_launch.out)
-    Indiegene_GE_germ(preprocessing_for_launch.out)
-    Indiegene_CE_som(preprocessing_for_launch.out)
-    Indiegene_CE_germ(preprocessing_for_launch.out)
-    SE8_som(preprocessing_for_launch.out)
-    SE8_germ(preprocessing_for_launch.out)
-    CDS(preprocessing_for_launch.out)
-    RNA_CT(preprocessing_for_launch.out)
-    RNA_SE8(preprocessing_for_launch.out)
-    Indiegene_CEFu(preprocessing_for_launch.out)
-    CopySetupScript(params.output_dir)
+    extract_and_upload_samples(project_output,copy_setup)
+    preprocessing_for_launch(extract_and_upload_samples.out,copy_setup)
+    Target_first(preprocessing_for_launch.out,copy_setup)
+    Indiegene_GE_Som(preprocessing_for_launch.out,copy_setup)
+    Indiegene_GE_germ(preprocessing_for_launch.out,copy_setup)
+    Indiegene_CE_som(preprocessing_for_launch.out,copy_setup)
+    Indiegene_CE_germ(preprocessing_for_launch.out,copy_setup)
+    SE8_som(preprocessing_for_launch.out,copy_setup)
+    SE8_germ(preprocessing_for_launch.out,copy_setup)
+    CDS(preprocessing_for_launch.out,copy_setup)
+    RNA_CT(preprocessing_for_launch.out,copy_setup)
+    RNA_SE8(preprocessing_for_launch.out,copy_setup)
+    Indiegene_CEFu(preprocessing_for_launch.out,copy_setup)
 }
