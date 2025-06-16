@@ -193,6 +193,21 @@ process Indiegene_CEFu {
     Indiegene_CEFu.py "${sample_file}"
     """
 }
+process CopySetupScript {
+    input:
+    val output_dir
+
+    output:
+    stdout
+
+    script:
+    """
+    cd "${params.output_dir}"
+    #basemount basespace
+    cd
+    cp ${projectDir}/bin/setup.sh "${params.output_dir}"/setup.sh
+    """
+}
 
 
 workflow{
@@ -215,4 +230,5 @@ workflow{
     RNA_CT(preprocessing_for_launch.out)
     RNA_SE8(preprocessing_for_launch.out)
     Indiegene_CEFu(preprocessing_for_launch.out)
+    CopySetupScript(params.output_dir)
 }
