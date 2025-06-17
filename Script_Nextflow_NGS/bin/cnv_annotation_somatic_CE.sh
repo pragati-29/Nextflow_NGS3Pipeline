@@ -28,36 +28,40 @@ awk -F',' 'BEGIN {OFS=","} NR>1 {print $(NF-2), $4}' "$csv_file" > list.txt
 input="list.txt"
 
 while IFS=',' read -r sample_id project_name; do
-    echo "Processing Sample: $sample_id, Project: $project_name"
+    # Check if this sample is INDIEGENE before processing
+    if awk -F',' -v sid="$sample_id" 'NR>1 && $1 == "INDIEGENE" && $(NF-2) == sid' "$csv_file" | grep -q .; then
+        echo "Processing Sample: $sample_id, Project: $project_name"
 
-    bam_path="$output_dir/basespace/Projects/$project_name/AppResults/$sample_id/Files/${sample_id}.bam"
-    bed_file=$(ls $output_dir/basespace/Projects/${project_name}/AppResults/${sample_id}/Files/*.bed | awk -F/ '!($NF ~ /'${sample_id}'/) { print $0 }')  # Use static BED unless dynamically needed
+        bam_path="$output_dir/basespace/Projects/$project_name/AppResults/$sample_id/Files/${sample_id}.bam"
+        bed_file=$(ls "$output_dir/basespace/Projects/${project_name}/AppResults/${sample_id}/Files/"*.bed | awk -F/ '!($NF ~ /'"${sample_id}"'/) { print $0 }')
 
-    echo "BAM path: $bam_path"
-    echo "BED file: $bed_file"
+        echo "BAM path: $bam_path"
+        echo "BED file: $bed_file"
 
-    mkdir -p "$sample_id"
+        mkdir -p "$sample_id"
 
-    echo "########## Starting config preparation #################"
-    perl "$cnv_config" "$bam_path" "$bed_file" $sample_id $chrLenFile $chrFiles $sambamba
-    echo "########## Config file prepared #######################"
+        echo "########## Starting config preparation #################"
+        perl "$cnv_config" "$bam_path" "$bed_file" "$sample_id" "$chrLenFile" "$chrFiles" "$sambamba"
+        echo "########## Config file prepared #######################"
 
-    echo "########## Starting CNV Control-FREEC ##################"
-    "$FREEC_PATH" -conf "${sample_id}/config_CNV.txt"
-    echo "########## Finished CNV Control-FREEC ##################"
+        echo "########## Starting CNV Control-FREEC ##################"
+        "$FREEC_PATH" -conf "${sample_id}/config_CNV.txt"
+        echo "########## Finished CNV Control-FREEC ##################"
 
-    echo "########## Starting annotation #########################"
-    cd "$sample_id"
-    
-    cp "$bam_ratio_CE" .
-    python3 "$(basename "$bam_ratio_CE")" $bed_file $CE_gene_list
+        echo "########## Starting annotation #########################"
+        cd "$sample_id"
 
-    cd ..
+        cp "$bam_ratio_CE" .
+        python3 "$(basename "$bam_ratio_CE")" "$bed_file" "$CE_gene_list"
 
-    find "$sample_id" -type f -name "*_R_cnv_combined.txt" -exec mv {} ./ \;
+        cd ..
 
-    echo "########## Finished annotation for $sample_id ##########"
+        find "$sample_id" -type f -name "*_R_cnv_combined.txt" -exec mv {} ./ \;
 
+        echo "########## Finished annotation for $sample_id ##########"
+    else
+        echo "Skipping Sample: $sample_id, not INDIEGENE"
+    fi
 done < "$input"
 
 echo "################## ALL FILES ARE DONE ###################"
