@@ -259,13 +259,10 @@ process CNV_Indiegene {
 
     script:
     """
-    #bash ${projectDir}/bin/cnv_annotation_somatic_CE.sh "${params.output_dir}" "${params.sample_file}"
-    if awk -F',' 'NR>1 && \$1 == "INDIEGENE"' "${params.sample_file}" | grep -q .; then
-        echo "Running CNV_Indiegene because INDIEGENE is present"
+    awk -F',' 'NR > 1 && \$1 == "INDIEGENE"' "${params.sample_file}" | while IFS=',' read -r test_name sample_type kit project file_name; do
+        echo "Running CNV_Indiegene for sample:"
         bash ${projectDir}/bin/cnv_annotation_somatic_CE.sh "${params.output_dir}" "${params.sample_file}"
-    else
-        echo "Skipping CNV_Indiegene: INDIEGENE not found in first column"
-    fi
+    done
     """
 }
 
@@ -284,7 +281,7 @@ process DNA_fusion {
 
     script:
     """
-    awk -F',' 'BEGIN {OFS=","} {if (NR>1) print \$(NF-2)}' "${params.sample_file}" > ${projectDir}/bin/FuSeq_WES_v1.0.0/list_test.txt
+    awk -F',' 'BEGIN {OFS=","} NR > 1 {print \$(NF-2), \$4}' "${params.sample_file}" > "${projectDir}/bin/FuSeq_WES_v1.0.0/list_test.txt"
     bash ${projectDir}/bin/FuSeq_WES_v1.0.0/FuSeq_BAM_FUS_auto.sh "${params.output_dir}" "${params.sample_file}"
     """
 }
