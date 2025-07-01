@@ -9,7 +9,14 @@ Created on Fri Dec  8 01:15:35 2023
 import os
 import re
 import glob
+import argparse
 import pandas as pd
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--fuseq", required=True, help="Path to fuseq directory")
+args = parser.parse_args()
+fuseq_path = args.fuseq
 
 # get a list of all files in the pwd
 file_list = glob.glob("*")
@@ -195,7 +202,7 @@ print ("Filtered fusions as per design")
 
 #------------------------------TAGGING ON KNOWN FUSIONS--------------------------------------------------
 
-known_Fusions = pd.read_csv("/home/bioinfoa/Pragati/FuSeq_WES_v1.0.0/known_Fusions.csv")
+known_Fusions = pd.read_csv(os.path.join(fuseq_path, "known_Fusions.csv"))
 
 # Storing formats to be sent to the reporting team
 final_df_exons = pd.DataFrame(columns=['#FusionGene', 'ReadSupport', 'LeftBreakpoint', 'strand1', 'RightBreakpoint', 'strand2', 'ReadNames', 'Exons', 'FusionStatus'])
@@ -315,4 +322,3 @@ final_df = final_df_known.drop(columns=['Sample_ID', 'strand1', 'strand2', 'Exon
 final_df.to_excel(f'{desired_string}_FUS_P.xlsx', index=False)
 print ("DONE")
 ##########################DONE############################################
-
