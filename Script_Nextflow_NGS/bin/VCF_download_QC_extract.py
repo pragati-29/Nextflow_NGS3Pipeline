@@ -1,119 +1,132 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
-import argparse
-import subprocess
-import glob
-import pandas as pd
+import sys
 import os
 import time
-import numpy as np
+import subprocess
+import pandas as pd
+import argparse
+
+CHECK_INTERVAL_MIN = 5
+MOUNT_TIMEOUT_SEC = 60
+
+def find_completed_appsession(appsession_name: str, project_name: str) -> str:
+    cmd = (
+        f"bs list appsessions --project-name '{project_name}' | "
+        f"grep '{appsession_name}' | grep 'Complete' | "
+        "awk -F'|' '{print $3}' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | head -n 1"
+    )
+    try:
+        return subprocess.check_output(cmd, shell=True, text=True).strip()
+    except subprocess.CalledProcessError:
+        return ""
+
+def ensure_mount_point(mount_dir: str) -> None:
+    os.makedirs(mount_dir, exist_ok=True)
+
+def mount_basespace(mount_dir: str) -> None:
+    if os.path.ismount(mount_dir):
+        print(f"[Unmounting] {mount_dir}")
+        subprocess.run(["basemount", "--unmount", mount_dir], check=True)
+
+    print(f"[Mounting] BaseSpace to {mount_dir}")
+    try:
+        subprocess.run(["basemount", mount_dir], check=True, capture_output=True, text=True)
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Failed to mount BaseSpace:\n{e.stderr}")
+        sys.exit(1)
+
+    waited = 0
+    while not os.path.ismount(mount_dir):
+        print(f"⏳ Waiting for BaseSpace mount at {mount_dir}... ({waited}/{MOUNT_TIMEOUT_SEC}s)")
+        time.sleep(2)
+        waited += 2
+        if waited >= MOUNT_TIMEOUT_SEC:
+            print(f"❌ Timeout waiting for BaseSpace to mount at {mount_dir}")
+            sys.exit(1)
+
+    print(f"[✔] BaseSpace mount ready at {mount_dir}")
 
 def main():
-    # Parse command-line arguments
-    parser = argparse.ArgumentParser(description="Process CSV file and perform analysis.")
-    parser.add_argument("--location", required=True, help="Directory location where files are stored")
-    parser.add_argument("--csv_file", required=True, help="Path to the CSV file")
-    
+    parser = argparse.ArgumentParser(description="Launch TARGET_FIRST AppSessions and monitor them.")
+    parser.add_argument("sample_file", help="Path to the input CSV file")
+    parser.add_argument("--mount-dir", default="basespace", help="Directory to mount BaseSpace")
     args = parser.parse_args()
-    location = args.location
-    csv_file = args.csv_file
-    
-    # Read the input CSV file into a pandas DataFrame
-    csv_data = pd.read_csv(csv_file)
-    
-    # Create annotation and output directories if they don't already exist
-    annotation_dir = os.path.join(location, "annotation")
-    output_dir = os.path.join(location, "output")
-    os.makedirs(annotation_dir, exist_ok=True)
-    os.makedirs(output_dir, exist_ok=True)
-    
-    # Iterate over each appsession name in the CSV
-    for appses_name in csv_data["appsession_name"]:
-        while True:
-            # Check the status of the BaseSpace app session
-            command_stat = '/usr/local/bin/bs appsession list | grep ' + appses_name+ ' | awk \'{print $6}\'' ' >' 'out.txt'
-            subprocess.run(command_stat, shell=True)
-            
-            # Read the output status
-            with open('out.txt', 'r') as file1:
-                data = file1.read()
-            
-            # If the app session is complete, proceed to download data
-            if "Complete" in data:
-                # Create a shell script to mount BaseSpace
-                bs_file_path = os.path.join(location, "basespace.sh")
-                with open(bs_file_path, "w") as bs_file:
-                    bs_file.write('basemount basespace')
-                
-                os.system(f"chmod 777 {bs_file_path}")
-                os.chdir(location)
-                
-                # Mount BaseSpace using subprocess
-                p = subprocess.Popen(['bash', bs_file_path], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-                output, error = p.communicate(input='yes\n')
-                os.chdir(annotation_dir)
-                
-                # Function to download VCF files from the BaseSpace session
-                def download_vcf(app_session_id):
-                    print(app_session_id)
-                    cmd = f'/usr/local/bin/bs appsession download -i {app_session_id} --extension=hard-filtered.vcf.gz -o {output_dir}'
-                    cmd_2 = f'find {output_dir} -type f -name "*.vcf.gz" -exec mv {{}} {output_dir} \;'
-                    cmd_3 = 'find -type d -name "*_ds*" -exec rm -rf {} \\;'
-                    
-                    # Run download and cleanup commands
-                    with open("output.log", "w") as log_file:
-                        subprocess.run(cmd, stdout=log_file, stderr=log_file, shell=True)
-                        subprocess.run(cmd_2, stdout=log_file, stderr=log_file, shell=True)
-                        subprocess.run(cmd_3, stdout=log_file, stderr=log_file, shell=True)
-                
-                # Retrieve the app session ID
-                command = '/usr/local/bin/bs appsession list | grep ' + appses_name+ ' | awk \'{print $4}\''
-                output = subprocess.check_output(command, shell=True)
-                app_session_id = int(output.strip())
-                
-                # Function to download and process DRAGEN metrics
-                def dragen_metrics(app_session_id):
-                    # Download summary CSV files from BaseSpace
-                    cmd_4 = f"/usr/local/bin/bs appsession download -i {app_session_id} --extension=.summary.csv -o {output_dir}"
-                    subprocess.run(cmd_4, shell=True)
 
-                    # Move all summary CSVs to output directory
-                    cmd_5 = f'find {output_dir} -type f -name "*.summary.csv" -exec cp {{}} {output_dir} \;'
-                    subprocess.run(cmd_5, shell=True)
-                    
-                    # Load and parse CSVs to merge metrics
-                    files = os.listdir(output_dir)
-                    filenames = [f for f in files if f.endswith('.csv')]
-                    
-                    dfs = []
-                    for filename in filenames:
-                        df = pd.read_csv(os.path.join(output_dir, filename), skiprows=3)  # Skip DRAGEN file headers
-                        dfs.append(df.iloc[:, 1])  # Get metrics column
-                    
-                    # Merge all metrics into a single DataFrame
-                    merged_df = pd.concat(dfs, axis=1).transpose()
-                    header = pd.read_csv(os.path.join(output_dir, filenames[0]), skiprows=3).iloc[:, 0]
-                    merged_df_01 = pd.concat([header.to_frame().transpose(), merged_df], ignore_index=True)
-                    
-                    # Save combined metrics to a CSV file
-                    merged_df_01.to_csv(os.path.join(location, "metrics.csv"), index=False, header=False)
-                    
-                    # Cleanup downloaded folders and CSVs
-                    cmd_3 = 'find -type d -name "*_ds*" -exec rm -rf {} \\;'
-                    subprocess.run(cmd_3, shell=True)
-                    
-                    for file in filenames:
-                        os.remove(os.path.join(output_dir, file))
-                
-                # Run metrics and VCF download functions
-                dragen_metrics(app_session_id)
-                download_vcf(app_session_id)
-                break  # Exit while-loop after processing
-        
-            # If the session is not complete, wait 60 seconds and check again
-            time.sleep(60)
+    try:
+        file1 = pd.read_csv(args.sample_file)
+    except Exception as e:
+        print(f"❌ Failed to read sample file: {e}")
+        sys.exit(1)
 
-# Entry point
+    project = file1["Project_name"].iloc[0]
+    status_filename = f"{project.upper()}_bs_status_complete.txt"
+    status_file = os.path.join(os.path.dirname(args.sample_file), status_filename)
+
+    grouped_samp = file1.groupby(["Capturing_Kit", "Somatic_Germline"])['Biosample_ID'].apply(
+        lambda x: ",".join(map(str, map(int, x)))
+    )
+
+    ensure_mount_point(args.mount_dir)
+
+    for idx, row in file1.iterrows():
+        test_name = row['Test_Name']
+        capr_kit = row['Capturing_Kit']
+        proj_id = row['Project_ID']
+        appsession_name = row['appsession_name']
+        bed_id = row['bed_id']
+        liq_tm = row['liquid_tumor']
+        vc_af_call = row['vc-af-call-threshold']
+        vc_af_filt = row['vc-af-filter-threshold']
+        vc_type = row['vc_type']
+        germ_som = row['Somatic_Germline']
+        sample_type = row['Sample_Type']
+        project_name = row['Project_name']
+
+        if not isinstance(appsession_name, str) or appsession_name.strip() == "":
+            print(f"⚠️ Skipping row {idx} due to missing appsession name.")
+            continue
+
+        if "somatic" in germ_som and "TARGET_FIRST" in test_name and "DNA" in sample_type:
+            if "FEV2F2both" in capr_kit:
+                biosamp_key = ("FEV2F2both", "somatic")
+                biosamp_FEV2 = grouped_samp.get(biosamp_key)
+                if not biosamp_FEV2:
+                    print(f"⚠️ Missing grouped biosamples for {biosamp_key}. Skipping.")
+                    continue
+
+                command_bs_launch = (
+                    f"bs launch application -n 'DRAGEN Enrichment' --app-version 3.9.5 "
+                    f"-o project-id:{proj_id} -o app-session-name:{appsession_name} -l {appsession_name} "
+                    f"-o vc-type:{vc_type} -o ht-ref:hg19-altaware-cnv-anchor.v8 -o fixed-bed:custom "
+                    f"-o target_bed_id:{bed_id} -o input_list.sample-id:biosamples/{biosamp_FEV2} "
+                    f"-o picard_checkbox:1 -o liquid_tumor:{liq_tm} -o af-filtering:1 "
+                    f"-o vc-af-call-threshold:{vc_af_call} -o vc-af-filter-threshold:{vc_af_filt} "
+                    f"-o sv_checkbox:1 -o sq-filtering:1 -o tmb:1 -o vc-hotspot:27723066652 "
+                    f"-o vcf-site-filter:1 -o hla:1 -o nirvana:1 -o commandline-disclaimer:true "
+                    f"-o arbitrary:'--read-trimmers:adapter --trim-adapter-read1' "
+                    f"-o additional-file:25600057590 -o automation-sex:unknown"
+                )
+
+                print(f"\n🚀 Launching AppSession: {appsession_name}")
+                launch_result = subprocess.run(command_bs_launch, shell=True, capture_output=True, text=True)
+                print("STDOUT:", launch_result.stdout.strip())
+                print("STDERR:", launch_result.stderr.strip())
+
+                print(f"🔁 Monitoring AppSession: {appsession_name}")
+                while True:
+                    app_id = find_completed_appsession(appsession_name, project_name)
+                    if app_id:
+                        print(f"[✔] AppSession {appsession_name} completed → ID: {app_id}")
+                        mount_basespace(args.mount_dir)
+                        break
+                    else:
+                        print(f"⏳ AppSession {appsession_name} not complete yet. Retrying in {CHECK_INTERVAL_MIN} minutes...")
+                        time.sleep(CHECK_INTERVAL_MIN * 60)
+
+    # Write status if completed
+    with open(status_file, "w") as f:
+        f.write(f"BaseSpace mounting complete for all TARGET_FIRST FEV2F2both samples in project {project}.\n")
+    print(f"\n📄 Status written to {status_file}")
+
 if __name__ == "__main__":
     main()
