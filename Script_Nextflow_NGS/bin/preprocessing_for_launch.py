@@ -1,127 +1,132 @@
 #!/usr/bin/env python3
-
-# Import necessary libraries
+import sys
+import os
+import time
+import subprocess
 import pandas as pd
-import csv
-import re
 import argparse
-from datetime import datetime
 
-# Define the main function to process the input CSV and generate an output CSV
-def process_file(input_file, output_file):
-    # Get the current date in the format dd_MMM_yy
-    current_date = datetime.now().strftime("%d_%b_%y")
+CHECK_INTERVAL_MIN = 5
+MOUNT_TIMEOUT_SEC = 60
 
-    # Mapping of capturing kit names to their corresponding bed IDs
-    bed_id_mapping = {
-        "GE": 32335159063,
-        "CE": 25985869859,
-        "SE8": 23683257154,
-        "FEV2F2both": 34857530934,
-        "CDS": 31946210817,
-        "CEFu": 32246847276
-    }
-
-    # CNV baseline IDs 
-    cnv_baseline = (
-        "cnv-baseline-id:26595964844,26596768352,26596768352,26597000441,"
-        "26596302077,26596768331,26596296009,26596677367,26596984439,"
-        "26596440110,26596089873,26596890400,26596199853,26595963870,"
-        "26597226773,26596302095,26597235779,26596296030,26595984910,"
-        "26595972945,26596669273,26596477171,26596089892,26595984889,"
-        "26596677388,26596477187,26596861347,26596268048,26596565254,"
-        "26596669289,26596247018,26595984929,26596477204,26596302112,"
-        "26596199870,26596302128,26596477221,26595972961,26596302145,"
-        "26595984953,26595991950,26595972980,26596199887,26596049977,"
-        "26596565272,26596669311,26609829389,26596565288,26596302164"
+def find_completed_appsession(appsession_name: str, project_name: str) -> str:
+    cmd = (
+        f"bs list appsessions --project-name '{project_name}' | "
+        f"grep '{appsession_name}' | grep 'Complete' | "
+        "awk -F'|' '{print $3}' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | head -n 1"
     )
-    baseline_noise = "baseline-noise-bed:26693875133"
+    try:
+        return subprocess.check_output(cmd, shell=True, text=True).strip()
+    except subprocess.CalledProcessError:
+        return ""
 
-    # CNV baseline and noise bed IDs for SE8 
-    cnv_baseline_se8 = (
-        "cnv-baseline-id:25791243964,25791291016,25791291033,25791291050,"
-        "25791406163,25791440084,25791528878,25791528895,25791582119,"
-        "25791582931,25791595964,25791595981,25791598767,25791637964,"
-        "25791670919,25791679146,25791679164,25791681916,25791681933"
-    )
-    baseline_noise_se8 = "baseline-noise-bed:25849773923"
+def ensure_mount_point(mount_dir: str) -> None:
+    os.makedirs(mount_dir, exist_ok=True)
 
-    # Read the input CSV into a DataFrame
-    df = pd.read_csv(input_file)
+def mount_basespace(mount_dir: str) -> None:
+    if os.path.ismount(mount_dir):
+        print(f"[Unmounting] {mount_dir}")
+        subprocess.run(["basemount", "--unmount", mount_dir], check=True)
 
-    # Compile regex patterns to identify "-B", "-BB", "-F", "-FF" sample ID suffixes
-    pattern_B = re.compile(r"-B[0-9]+|-BB[0-9]+|-B[0-9]+|-B", re.IGNORECASE)
-    pattern_F = re.compile(r"-F[0-9]+|-FF[0-9]+|-F[0-9]+|-F", re.IGNORECASE)
+    print(f"[Mounting] BaseSpace to {mount_dir}")
+    try:
+        subprocess.run(["basemount", mount_dir], check=True, capture_output=True, text=True)
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Failed to mount BaseSpace:\n{e.stderr}")
+        sys.exit(1)
 
-    # Map capturing kit to bed ID
-    df["bed_id"] = df["Capturing_Kit"].map(bed_id_mapping)
+    waited = 0
+    while not os.path.ismount(mount_dir):
+        print(f"⏳ Waiting for BaseSpace mount at {mount_dir}... ({waited}/{MOUNT_TIMEOUT_SEC}s)")
+        time.sleep(2)
+        waited += 2
+        if waited >= MOUNT_TIMEOUT_SEC:
+            print(f"❌ Timeout waiting for BaseSpace to mount at {mount_dir}")
+            sys.exit(1)
 
-    # Identify liquid tumor samples based on presence of "-cf-" in the sample ID
-    df["liquid_tumor"] = df["Sample_ID"].apply(lambda x: 1 if "-cf-" in x.lower() else 0)
+    print(f"[✔] BaseSpace mount ready at {mount_dir}")
 
-    # Determine variant calling type: 0 for germline, 1 for somatic
-    df["vc_type"] = df["Sample_ID"].apply(lambda x: 0 if pattern_B.search(x) and "cf" not in x else 1)
-
-    # Classify as somatic, germline, or unknown based on patterns in Sample_ID
-    df["Somatic_Germline"] = df["Sample_ID"].apply(
-        lambda x: "germline" if pattern_B.search(x) and "cf" not in x else (
-            "somatic" if pattern_F.search(x) or "cf" in x else "unknown"
-        )
-    )
-
-    # Create a descriptive appsession name with date and metadata
-    df["appsession_name"] = df.apply(
-        lambda row: f"{current_date}_{row['Test_Name']}_{row['Sample_Type']}_{row['Capturing_Kit']}_{row['Somatic_Germline']}",
-        axis=1
-    )
-
-    # Set AF call threshold: 1% for cfDNA, 5% otherwise
-    df["vc-af-call-threshold"] = df["Sample_ID"].apply(lambda x: 1 if "-cf-" in x else 5)
-
-    # Set AF filter threshold: 5% for cfDNA, 10% otherwise
-    df["vc-af-filter-threshold"] = df["Sample_ID"].apply(lambda x: 5 if "-cf-" in x else 10)
-
-    # Assign CNV baseline ID conditionally based on test name, kit, and somatic/germline type
-    df["cnv_baseline_Id"] = df.apply(
-        lambda row: cnv_baseline if (
-            "INDIEGENE" in row["Test_Name"].upper() and
-            row["Capturing_Kit"] in ["CE", "CEFu"] and
-            row["Somatic_Germline"] in ["somatic", "germline"]
-        ) else (
-            cnv_baseline_se8 if (
-                "ABSOLUTE" in row["Test_Name"].upper() and
-                row["Capturing_Kit"] == "SE8" and
-                row["Somatic_Germline"] in ["somatic", "germline"]
-            ) else None
-        ),
-        axis=1
-    )
-
-    # Assign baseline noise bed similarly, but only for somatic cases
-    df["baseline-noise-bed"] = df.apply(
-        lambda row: baseline_noise if (
-            "INDIEGENE" in row["Test_Name"].upper() and
-            row["Capturing_Kit"] in ["CE", "CEFu"] and
-            row["Somatic_Germline"] == "somatic"
-        ) else (
-            baseline_noise_se8 if (
-                "ABSOLUTE" in row["Test_Name"].upper() and
-                row["Capturing_Kit"] == "SE8" and
-                row["Somatic_Germline"] == "somatic"
-            ) else None
-        ),
-        axis=1
-    )
-
-    # Save the processed DataFrame to the output CSV
-    df.to_csv(output_file, index=False)
-
-# Define argument parsing for CLI usage
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Process input CSV file and generate output CSV file.")
-    parser.add_argument("input_file", help="Path to input CSV file")
-    parser.add_argument("output_file", help="Path to output CSV file")
+def main():
+    parser = argparse.ArgumentParser(description="Launch TARGET_FIRST AppSessions and monitor them.")
+    parser.add_argument("sample_file", help="Path to the input CSV file")
+    parser.add_argument("--mount-dir", default="basespace", help="Directory to mount BaseSpace")
     args = parser.parse_args()
 
-    # Run the processing function with user-provided arguments
-    process_file(args.input_file, args.output_file)
+    try:
+        file1 = pd.read_csv(args.sample_file)
+    except Exception as e:
+        print(f"❌ Failed to read sample file: {e}")
+        sys.exit(1)
+
+    project = file1["Project_name"].iloc[0]
+    status_filename = f"{project.upper()}_bs_status_complete.txt"
+    status_file = os.path.join(os.path.dirname(args.sample_file), status_filename)
+
+    grouped_samp = file1.groupby(["Capturing_Kit", "Somatic_Germline"])['Biosample_ID'].apply(
+        lambda x: ",".join(map(str, map(int, x)))
+    )
+
+    ensure_mount_point(args.mount_dir)
+
+    for idx, row in file1.iterrows():
+        test_name = row['Test_Name']
+        capr_kit = row['Capturing_Kit']
+        proj_id = row['Project_ID']
+        appsession_name = row['appsession_name']
+        bed_id = row['bed_id']
+        liq_tm = row['liquid_tumor']
+        vc_af_call = row['vc-af-call-threshold']
+        vc_af_filt = row['vc-af-filter-threshold']
+        vc_type = row['vc_type']
+        germ_som = row['Somatic_Germline']
+        sample_type = row['Sample_Type']
+        project_name = row['Project_name']
+
+        if not isinstance(appsession_name, str) or appsession_name.strip() == "":
+            print(f"⚠️ Skipping row {idx} due to missing appsession name.")
+            continue
+
+        if "somatic" in germ_som and "TARGET_FIRST" in test_name and "DNA" in sample_type:
+            if "FEV2F2both" in capr_kit:
+                biosamp_key = ("FEV2F2both", "somatic")
+                biosamp_FEV2 = grouped_samp.get(biosamp_key)
+                if not biosamp_FEV2:
+                    print(f"⚠️ Missing grouped biosamples for {biosamp_key}. Skipping.")
+                    continue
+
+                command_bs_launch = (
+                    f"bs launch application -n 'DRAGEN Enrichment' --app-version 3.9.5 "
+                    f"-o project-id:{proj_id} -o app-session-name:{appsession_name} -l {appsession_name} "
+                    f"-o vc-type:{vc_type} -o ht-ref:hg19-altaware-cnv-anchor.v8 -o fixed-bed:custom "
+                    f"-o target_bed_id:{bed_id} -o input_list.sample-id:biosamples/{biosamp_FEV2} "
+                    f"-o picard_checkbox:1 -o liquid_tumor:{liq_tm} -o af-filtering:1 "
+                    f"-o vc-af-call-threshold:{vc_af_call} -o vc-af-filter-threshold:{vc_af_filt} "
+                    f"-o sv_checkbox:1 -o sq-filtering:1 -o tmb:1 -o vc-hotspot:27723066652 "
+                    f"-o vcf-site-filter:1 -o hla:1 -o nirvana:1 -o commandline-disclaimer:true "
+                    f"-o arbitrary:'--read-trimmers:adapter --trim-adapter-read1' "
+                    f"-o additional-file:25600057590 -o automation-sex:unknown"
+                )
+
+                print(f"\n🚀 Launching AppSession: {appsession_name}")
+                launch_result = subprocess.run(command_bs_launch, shell=True, capture_output=True, text=True)
+                print("STDOUT:", launch_result.stdout.strip())
+                print("STDERR:", launch_result.stderr.strip())
+
+                print(f"🔁 Monitoring AppSession: {appsession_name}")
+                while True:
+                    app_id = find_completed_appsession(appsession_name, project_name)
+                    if app_id:
+                        print(f"[✔] AppSession {appsession_name} completed → ID: {app_id}")
+                        mount_basespace(args.mount_dir)
+                        break
+                    else:
+                        print(f"⏳ AppSession {appsession_name} not complete yet. Retrying in {CHECK_INTERVAL_MIN} minutes...")
+                        time.sleep(CHECK_INTERVAL_MIN * 60)
+
+    # Write status if completed
+    with open(status_file, "w") as f:
+        f.write(f"BaseSpace mounting complete for all TARGET_FIRST FEV2F2both samples in project {project}.\n")
+    print(f"\n📄 Status written to {status_file}")
+
+if __name__ == "__main__":
+    main()
