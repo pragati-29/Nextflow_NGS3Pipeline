@@ -21,10 +21,10 @@ df.loc[df["file_name"].str.contains(r"(?i)([_-]|^)CE([_-]|$)", na=False), "Captu
 df.loc[~df["file_name"].str.contains(r"(?i)[_-]CT[_-]|[_-]ST8[_-]", na=False), "Sample_Type"] = "DNA"
 
 # Fill Test_Name
-df.loc[df["Capturing_Kit"] == "GE", "Test_Name"] = "INDIEGENE"
+df.loc[df["Capturing_Kit"] == "GE", "Test_Name"] = "163panel"
 df.loc[df["Capturing_Kit"] == "FEV2F2both", "Test_Name"] = "TARGET_FIRST"
 df.loc[df["Capturing_Kit"].isin(["CE"]), "Test_Name"] = "INDIEGENE"
 df.loc[df["Capturing_Kit"].isin(["SE8"]), "Test_Name"] = "ABSOLUTE"
 df.drop_duplicates(subset=["file_name"], keep="first", inplace=True)
-output_file_path = os.path.join(current_directory, "test_ngs3_nextflow_Copy_try.csv")
+output_file_path = os.path.join(current_directory, "nf_MANIFEST.csv")
 df.to_csv(output_file_path,index=False)
